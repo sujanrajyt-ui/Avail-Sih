@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AVAIL Railway Operations - Block Request Submission</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "tertiary-container": "#c9a74d",
+                        "secondary-fixed": "#e9ddff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "inverse-on-surface": "#322f35",
+                        "on-background": "#e6e0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "primary-fixed-dim": "#cfbcff",
+                        "primary": "#cfbcff",
+                        "outline": "#948e9c",
+                        "surface-container-lowest": "#0f0d13",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed": "#22005d",
+                        "on-surface": "#e6e0e9",
+                        "on-tertiary": "#3e2e00",
+                        "on-secondary": "#342b4b",
+                        "on-primary": "#381e72",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "on-secondary-fixed": "#1f1635",
+                        "surface-variant": "#36343a",
+                        "tertiary-fixed": "#ffdf93",
+                        "tertiary": "#e7c365",
+                        "surface-container-low": "#1d1b20",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-primary-container": "#e0d2ff",
+                        "primary-fixed": "#e9ddff",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-container": "#bfb2da",
+                        "surface-container": "#211f24",
+                        "surface": "#141218",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "secondary": "#cdc0e9",
+                        "error-container": "#93000a",
+                        "surface-bright": "#3b383e",
+                        "inverse-primary": "#6750a4",
+                        "outline-variant": "#494551",
+                        "primary-container": "#6750a4",
+                        "on-tertiary-container": "#503d00",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-tint": "#cfbcff",
+                        "background": "#141218",
+                        "surface-dim": "#141218",
+                        "surface-container-highest": "#36343a",
+                        "surface-container-high": "#2b292f",
+                        "error": "#ffb4ab"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-lg": "32px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px",
+                        "container-padding": "24px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": [
+                            "Inter"
+                        ],
+                        "label-xs": [
+                            "Inter"
+                        ],
+                        "headline-sm": [
+                            "Inter"
+                        ],
+                        "display-lg": [
+                            "Inter"
+                        ],
+                        "data-md": [
+                            "JetBrains Mono"
+                        ],
+                        "data-lg": [
+                            "JetBrains Mono"
+                        ],
+                        "body-base": [
+                            "Inter"
+                        ]
+                    },
+                    "fontSize": {
+                        "headline-md": [
+                            "24px",
+                            {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "label-xs": [
+                            "12px",
+                            {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "headline-sm": [
+                            "18px",
+                            {
+                                "lineHeight": "24px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "display-lg": [
+                            "48px",
+                            {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "data-md": [
+                            "14px",
+                            {
+                                "lineHeight": "20px",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "data-lg": [
+                            "20px",
+                            {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "body-base": [
+                            "16px",
+                            {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(22, 28, 45, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+        }
+
+        /* Form inputs styling */
+        .tech-input {
+            background-color: theme('colors.surface-container-highest');
+            border: 1px solid theme('colors.outline-variant');
+            color: theme('colors.on-surface');
+            transition: all 0.2s ease;
+        }
+
+        .tech-input:focus {
+            border-color: theme('colors.primary');
+            outline: none;
+            box-shadow: 0 0 0 1px theme('colors.primary');
+        }
+
+        /* Print Theme Overrides (simulated for display) */
+        .print-theme-sim {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .print-theme-sim .glass-panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .print-theme-sim .tech-table-header {
+            background-color: #f1f5f9;
+            color: #334155;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .print-theme-sim .tech-table-row {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .print-theme-sim .tech-table-row:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .print-theme-sim .text-on-surface-variant {
+            color: #64748b;
+        }
+
+        .print-theme-sim .text-on-surface {
+            color: #0f172a;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background text-on-surface min-h-screen flex flex-col font-body-base overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+    <!-- TopNavBar -->
+    <header
+        class="bg-surface dark:bg-surface text-primary dark:text-primary docked full-width top-0 border-b border-outline-variant flat no shadows flex justify-between items-center w-full px-container-padding h-16 sticky z-50">
+        <div class="flex items-center gap-gutter">
+            <span class="font-headline-md text-headline-md font-bold text-primary tracking-tighter cursor-default">AVAIL
+                Railway Operations</span>
+        </div>
+        <nav class="hidden md:flex items-center gap-stack-lg h-full">
+            <a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center h-full"
+                href="/dashboard">Dashboard</a>
+            <a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center h-full"
+                href="/gantt">Gantt View</a>
+            <a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center h-full"
+                href="/simulation">Simulation</a>
+            <a aria-current="page"
+                class="font-label-xs text-label-xs text-primary border-b-2 border-primary pb-1 hover:text-primary transition-colors flex items-center h-full opacity-80"
+                href="/reports">Reports</a>
+        </nav>
+        <div class="flex items-center gap-stack-md">
+            <button aria-label="notifications" class="text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <button aria-label="settings" class="text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">settings</span>
+            </button>
+            <button aria-label="help" class="text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">help</span>
+            </button>
+            <div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
+                <img alt="Operator Profile" class="w-full h-full object-cover"
+                    data-alt="A tightly cropped headshot of a professional male railway operator in his late 30s. He is wearing a crisp, dark navy uniform with subtle reflective accents, looking focused and calm. The lighting is dramatic, high-contrast, typical of a modern mission control center with soft blue screen glow illuminating his face against a deep, dark background. The aesthetic is highly detailed, realistic, and cinematic."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUeEa5KyB71fwRiGJ1PK24ZAaV3vAOU6fte6JwxxSggyX9uUb3XqdpPCwEyzLC_QXxy3iZIk2-NSIst_O_lVbsN6Z8aiDk0t-E5pdhWrrPtZktTgn3QCed0t_6WvVMyxBM7YFCRxjtGv7_HUvndiQByrozdjzUupoTXPraKe8o_xZM5aP5c0FaquOdmLrzzoPeB00AEDscq4PAtc4kTQgo4jHqgB4sIhfHoZxU9NClC7XQ4S0q53sC" />
+            </div>
+        </div>
+    </header>
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-container-padding flex flex-col gap-stack-lg">
+            <!-- Page Header -->
+            <div class="flex justify-between items-end">
+                <div>
+                    <h1 class="font-display-lg text-display-lg text-on-surface">Operations Planning</h1>
+                    <p class="font-body-base text-body-base text-on-surface-variant mt-2">Submit block requests and
+                        review finalized schedules.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter">
+                <!-- LEFT COLUMN: Block Request Submission Form (Bento Grid Style) -->
+                <div class="xl:col-span-5 flex flex-col gap-gutter">
+                    <div class="glass-panel rounded-xl p-stack-md flex flex-col gap-stack-md">
+                        <div class="flex items-center gap-2 border-b border-outline-variant pb-2">
+                            <span class="material-symbols-outlined text-primary">edit_document</span>
+                            <h2 class="font-headline-md text-headline-md text-on-surface">Block Request Submission</h2>
+                        </div>
+                        <form class="flex flex-col gap-stack-md mt-2">
+                            <!-- Department & Segment -->
+                            <div class="grid grid-cols-2 gap-gutter">
+                                <div class="flex flex-col gap-unit">
+                                    <label
+                                        class="font-label-xs text-label-xs text-on-surface-variant uppercase">Department</label>
+                                    <select class="tech-input rounded-lg p-2 font-data-md text-data-md w-full">
+                                        <option disabled="" selected="" value="">Select Dept...</option>
+                                        <option value="civil">Civil</option>
+                                        <option value="ohe">OHE</option>
+                                        <option value="snt">S&amp;T</option>
+                                    </select>
+                                </div>
+                                <div class="flex flex-col gap-unit">
+                                    <label
+                                        class="font-label-xs text-label-xs text-on-surface-variant uppercase">Segment</label>
+                                    <select class="tech-input rounded-lg p-2 font-data-md text-data-md w-full">
+                                        <option disabled="" selected="" value="">Select Segment...</option>
+                                        <option value="ndls-cnb">NDLS - CNB</option>
+                                        <option value="cnb-pryj">CNB - PRYJ</option>
+                                        <option value="pryj-ddu">PRYJ - DDU</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Date & Time -->
+                            <div class="grid grid-cols-2 gap-gutter">
+                                <div class="flex flex-col gap-unit">
+                                    <label class="font-label-xs text-label-xs text-on-surface-variant uppercase">Start
+                                        Date/Time</label>
+                                    <input class="tech-input rounded-lg p-2 font-data-md text-data-md w-full"
+                                        type="datetime-local" />
+                                </div>
+                                <div class="flex flex-col gap-unit">
+                                    <label class="font-label-xs text-label-xs text-on-surface-variant uppercase">End
+                                        Date/Time</label>
+                                    <input class="tech-input rounded-lg p-2 font-data-md text-data-md w-full"
+                                        type="datetime-local" />
+                                </div>
+                            </div>
+                            <!-- Priority & Work Type -->
+                            <div class="grid grid-cols-2 gap-gutter">
+                                <div class="flex flex-col gap-unit">
+                                    <label
+                                        class="font-label-xs text-label-xs text-on-surface-variant uppercase">Priority
+                                        Level</label>
+                                    <div class="flex gap-2">
+                                        <label
+                                            class="flex-1 flex items-center justify-center gap-1 border border-outline-variant rounded-lg p-2 cursor-pointer hover:bg-surface-variant transition-colors has-[:checked]:bg-primary-container has-[:checked]:text-on-primary-container has-[:checked]:border-primary">
+                                            <input class="sr-only" name="priority" type="radio" value="routine" />
+                                            <span class="font-label-xs text-label-xs">Routine</span>
+                                        </label>
+                                        <label
+                                            class="flex-1 flex items-center justify-center gap-1 border border-outline-variant rounded-lg p-2 cursor-pointer hover:bg-surface-variant transition-colors has-[:checked]:bg-error-container has-[:checked]:text-on-error-container has-[:checked]:border-error">
+                                            <input class="sr-only" name="priority" type="radio" value="urgent" />
+                                            <span class="font-label-xs text-label-xs">Urgent</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-unit">
+                                    <label class="font-label-xs text-label-xs text-on-surface-variant uppercase">Work
+                                        Type</label>
+                                    <input class="tech-input rounded-lg p-2 font-data-md text-data-md w-full"
+                                        placeholder="e.g., Track renewal" type="text" />
+                                </div>
+                            </div>
+                            <!-- Description -->
+                            <div class="flex flex-col gap-unit">
+                                <label class="font-label-xs text-label-xs text-on-surface-variant uppercase">Remarks /
+                                    Justification</label>
+                                <textarea
+                                    class="tech-input rounded-lg p-2 font-body-base text-body-base w-full resize-none"
+                                    rows="3"></textarea>
+                            </div>
+                            <!-- Submit Action -->
+                            <div class="flex justify-end mt-2">
+                                <button
+                                    class="bg-primary text-on-primary px-4 py-2 rounded-lg font-headline-sm text-headline-sm hover:opacity-90 transition-opacity flex items-center gap-2"
+                                    type="button">
+                                    <span class="material-symbols-outlined"
+                                        style="font-variation-settings: 'FILL' 1;">send</span>
+                                    Submit Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- RIGHT COLUMN: Export / Reports (Simulated Print Theme) -->
+                <div class="xl:col-span-7 flex flex-col gap-gutter">
+                    <div
+                        class="print-theme-sim rounded-xl p-stack-md flex flex-col h-full gap-stack-md relative overflow-hidden transition-all duration-500 ease-in-out">
+                        <!-- Header & Actions -->
+                        <div class="flex justify-between items-center border-b pb-4 border-gray-300">
+                            <div>
+                                <h2 class="font-headline-md text-headline-md text-gray-900 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-gray-700">summarize</span>
+                                    Finalized Block Schedule
+                                </h2>
+                                <p class="font-body-base text-body-base text-gray-600">Generated: 2023-10-27 14:00Z</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button
+                                    class="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-label-xs text-label-xs flex items-center gap-1 hover:bg-blue-700 transition-colors shadow-sm">
+                                    <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+                                    Download PDF
+                                </button>
+                                <button onclick="downloadCSV()"
+                                    class="bg-green-600 text-white px-3 py-1.5 rounded-lg font-label-xs text-label-xs flex items-center gap-1 hover:bg-green-700 transition-colors shadow-sm">
+                                    <span class="material-symbols-outlined text-[16px]">csv</span>
+                                    Download CSV
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Data Dense Table -->
+                        <div class="overflow-x-auto flex-1">
+                            <table class="w-full text-left border-collapse">
+                                <thead
+                                    class="tech-table-header font-label-xs text-label-xs uppercase tracking-wider sticky top-0 bg-gray-100 z-10">
+                                    <tr>
+                                        <th class="p-2 w-24">Req ID</th>
+                                        <th class="p-2 w-24">Dept</th>
+                                        <th class="p-2">Segment</th>
+                                        <th class="p-2 w-40">Start Time</th>
+                                        <th class="p-2 w-40">End Time</th>
+                                        <th class="p-2 w-24">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="font-data-md text-data-md text-gray-800">
+                                    <tr class="tech-table-row hover:bg-gray-50">
+                                        <td class="p-2">REQ-902</td>
+                                        <td class="p-2 font-semibold text-orange-700">CIVIL</td>
+                                        <td class="p-2">NDLS - TKJ (Up Line)</td>
+                                        <td class="p-2 text-gray-600">2023-10-28 02:00</td>
+                                        <td class="p-2 text-gray-600">2023-10-28 05:00</td>
+                                        <td class="p-2"><span
+                                                class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px] uppercase font-bold">Approved</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="tech-table-row hover:bg-gray-50">
+                                        <td class="p-2">REQ-903</td>
+                                        <td class="p-2 font-semibold text-blue-700">OHE</td>
+                                        <td class="p-2">CNB - CPA (Dn Line)</td>
+                                        <td class="p-2 text-gray-600">2023-10-28 03:30</td>
+                                        <td class="p-2 text-gray-600">2023-10-28 06:30</td>
+                                        <td class="p-2"><span
+                                                class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px] uppercase font-bold">Approved</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="tech-table-row hover:bg-gray-50">
+                                        <td class="p-2">REQ-905</td>
+                                        <td class="p-2 font-semibold text-purple-700">S&amp;T</td>
+                                        <td class="p-2">PRYJ Yard</td>
+                                        <td class="p-2 text-gray-600">2023-10-29 01:00</td>
+                                        <td class="p-2 text-gray-600">2023-10-29 02:30</td>
+                                        <td class="p-2"><span
+                                                class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-[10px] uppercase font-bold">Pending</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="tech-table-row hover:bg-gray-50">
+                                        <td class="p-2">REQ-908</td>
+                                        <td class="p-2 font-semibold text-orange-700">CIVIL</td>
+                                        <td class="p-2">DDU - BBU (Bi-dir)</td>
+                                        <td class="p-2 text-gray-600">2023-10-29 10:00</td>
+                                        <td class="p-2 text-gray-600">2023-10-29 14:00</td>
+                                        <td class="p-2"><span
+                                                class="bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] uppercase font-bold">Rejected</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Watermark -->
+                        <div
+                            class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
+                            <span
+                                class="font-display-lg text-display-lg text-gray-900 transform -rotate-45 text-[120px]">CONFIDENTIAL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+<script>
+async function downloadCSV() {
+    try {
+        const res = await fetch('/api/optimize', { method: 'POST' });
+        const data = await res.json();
+        const trains = (data.optimization || {}).optimized_timetable || [];
+        const blocks = data.integrated_blocks || [];
+        let csv = 'Block_ID,Segment,Departments,Start,End,Hours_Saved,Risk_Score\n';
+        blocks.forEach(b => {
+            csv += [b.block_id, b.segment, (b.departments||[]).join('+'), b.start_time_str, b.end_time_str,
+                    b.hours_saved, (b.predicted_delay_risk||0).toFixed(2)].join(',') + '\n';
+        });
+        const link = document.createElement('a');
+        link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+        link.download = 'avail_block_schedule_' + new Date().toISOString().split('T')[0] + '.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        console.log('[AVAIL] CSV with', blocks.length, 'blocks exported.');
+    } catch(e) {
+        alert('Export failed - using fallback data.');
+        const link = document.createElement('a');
+        link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(
+            'Block_ID,Segment,Departments,Start,End,Hours_Saved\nICB-001,CNB-PRYJ,Civil+OHE+S%26T,06:00,10:30,3.0\nICB-002,DDU-GAYA,Civil+OHE,13:00,17:30,2.5\nICB-003,GAYA-DHN,S%26T,02:00,05:00,1.5\nICB-004,DHN-ASN,Civil,10:00,14:00,0.5\n'
+        );
+        link.download = 'avail_block_schedule.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+
+async function submitBlockRequest(event) {
+    event.preventDefault();
+    const form = event.target;
+    const fd = new FormData(form);
+    const now = new Date();
+    const startH = parseInt(fd.get('start_time') || '14') || 14;
+    const durationH = parseFloat(fd.get('duration') || '4') || 4;
+    const payload = {
+        request_id: 'REQ-' + Date.now(),
+        department: fd.get('department') || 'Civil',
+        department_code: (fd.get('department') || 'CIVIL').substring(0, 3).toUpperCase(),
+        segment: (fd.get('from_station') || 'NDLS') + '-' + (fd.get('to_station') || 'CNB'),
+        from_station: fd.get('from_station') || 'NDLS',
+        to_station: fd.get('to_station') || 'CNB',
+        work_type: fd.get('work_type') || 'Maintenance work',
+        preferred_start_min: startH * 60,
+        preferred_end_min: startH * 60 + Math.round(durationH * 60),
+        min_duration_min: Math.round(durationH * 60),
+        priority: parseInt(fd.get('priority') || '2'),
+        track_affected: fd.get('track_affected') || 'DOWN_LINE',
+        required_speed_restriction_kmph: parseInt(fd.get('speed_restriction') || '30')
+    };
+    try {
+        const res = await fetch('/api/requests', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            const d = await res.json();
+            alert('Request submitted! Total requests: ' + d.total_requests);
+            form.reset();
+        } else {
+            const err = await res.json();
+            alert('Validation Error: ' + JSON.stringify(err.detail));
+        }
+    } catch(e) { alert('Submission failed: ' + e.message); }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    if (form) form.addEventListener('submit', submitBlockRequest);
+});
+</script>
+</body>
+
+</html>

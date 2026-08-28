@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AVAIL Railway Operations - Simulation Panel</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "tertiary-container": "#c9a74d",
+                        "secondary-fixed": "#e9ddff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "inverse-on-surface": "#322f35",
+                        "on-background": "#e6e0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "primary-fixed-dim": "#cfbcff",
+                        "primary": "#cfbcff",
+                        "outline": "#948e9c",
+                        "surface-container-lowest": "#0f0d13",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed": "#22005d",
+                        "on-surface": "#e6e0e9",
+                        "on-tertiary": "#3e2e00",
+                        "on-secondary": "#342b4b",
+                        "on-primary": "#381e72",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "on-secondary-fixed": "#1f1635",
+                        "surface-variant": "#36343a",
+                        "tertiary-fixed": "#ffdf93",
+                        "tertiary": "#e7c365",
+                        "surface-container-low": "#1d1b20",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-primary-container": "#e0d2ff",
+                        "primary-fixed": "#e9ddff",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-container": "#bfb2da",
+                        "surface-container": "#211f24",
+                        "surface": "#141218",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "secondary": "#cdc0e9",
+                        "error-container": "#93000a",
+                        "surface-bright": "#3b383e",
+                        "inverse-primary": "#6750a4",
+                        "outline-variant": "#494551",
+                        "primary-container": "#6750a4",
+                        "on-tertiary-container": "#503d00",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-tint": "#cfbcff",
+                        "background": "#141218",
+                        "surface-dim": "#141218",
+                        "surface-container-highest": "#36343a",
+                        "surface-container-high": "#2b292f",
+                        "error": "#ffb4ab"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-lg": "32px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px",
+                        "container-padding": "24px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": [
+                            "Inter", "sans-serif"
+                        ],
+                        "label-xs": [
+                            "Inter", "sans-serif"
+                        ],
+                        "headline-sm": [
+                            "Inter", "sans-serif"
+                        ],
+                        "display-lg": [
+                            "Inter", "sans-serif"
+                        ],
+                        "data-md": [
+                            "JetBrains Mono", "monospace"
+                        ],
+                        "data-lg": [
+                            "JetBrains Mono", "monospace"
+                        ],
+                        "body-base": [
+                            "Inter", "sans-serif"
+                        ]
+                    },
+                    "fontSize": {
+                        "headline-md": [
+                            "24px",
+                            {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "label-xs": [
+                            "12px",
+                            {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "headline-sm": [
+                            "18px",
+                            {
+                                "lineHeight": "24px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "display-lg": [
+                            "48px",
+                            {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "data-md": [
+                            "14px",
+                            {
+                                "lineHeight": "20px",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "data-lg": [
+                            "20px",
+                            {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "body-base": [
+                            "16px",
+                            {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .data-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #cfbcff;
+            /* primary */
+            cursor: pointer;
+            margin-top: -6px;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #494551;
+            /* outline-variant */
+            border-radius: 2px;
+        }
+
+        .gantt-bar-civil {
+            background-color: #6750a4;
+        }
+
+        /* primary-container */
+        .gantt-bar-ohe {
+            background-color: #e7c365;
+        }
+
+        /* tertiary */
+        .gantt-bar-conflict {
+            background-color: #ffb4ab;
+        }
+
+        /* error */
+
+        @keyframes slideInDelta {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-delta {
+            animation: slideInDelta 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface h-screen overflow-hidden flex flex-col antialiased">
+    <!-- TopNavBar -->
+    <nav
+        class="bg-surface dark:bg-surface text-primary dark:text-primary flex justify-between items-center w-full px-container-padding h-16 border-b border-outline-variant flat no shadows z-50">
+        <div class="flex items-center gap-gutter">
+            <span class="font-headline-md text-headline-md font-bold text-primary tracking-tighter">AVAIL Railway
+                Operations</span>
+        </div>
+        <div class="hidden md:flex items-center gap-stack-lg">
+            <a class="text-on-surface-variant hover:text-primary transition-colors font-label-xs text-label-xs uppercase"
+                href="/dashboard">Dashboard</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors font-label-xs text-label-xs uppercase"
+                href="/gantt">Gantt View</a>
+            <a class="text-primary border-b-2 border-primary pb-1 hover:text-primary transition-colors font-label-xs text-label-xs uppercase opacity-80"
+                href="/simulation">Simulation</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors font-label-xs text-label-xs uppercase"
+                href="/reports">Reports</a>
+        </div>
+        <div class="flex items-center gap-stack-md">
+            <div class="relative">
+                <input
+                    class="bg-surface-container-high border border-outline-variant text-on-surface rounded-lg pl-3 pr-10 py-1.5 font-label-xs text-label-xs focus:ring-primary focus:border-primary w-64"
+                    placeholder="Search operations..." type="text" />
+                <span
+                    class="material-symbols-outlined absolute right-2 top-1.5 text-on-surface-variant text-sm">search</span>
+            </div>
+            <button class="text-on-surface-variant hover:text-primary transition-colors" title="Notifications">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <button class="text-on-surface-variant hover:text-primary transition-colors" title="Settings">
+                <span class="material-symbols-outlined">settings</span>
+            </button>
+            <button class="text-on-surface-variant hover:text-primary transition-colors" title="Help">
+                <span class="material-symbols-outlined">help</span>
+            </button>
+            <img alt="Operator Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover"
+                data-alt="A professional headshot of a railway operations manager in a high-tech control room setting. The lighting is dramatic and cinematic, reflecting a dark-mode, mission-control aesthetic. Cool blue and subtle purple lights subtly illuminate the background, emphasizing precision and authority."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqpLbYkEhcPC4QdXEcsBl4wcobU0S8EzS-eH-Z171v15wH9azeIQYuP4EAzx5eiMcjB20CbuRaN4wMVMeU2A370LN6LWdyl0d7CV7Pgrz2K3oF8w6gKRU3geht2JfAkJCdzy8hypIy9mEIt8FKb61yN48ZTTN2yN0H4u_G3uD41Ze8f67I1LdD_kF6rvx3CMtMQm-xjBT4V2kIYvZZGI9JmeDW5iIPpWEna6-quMkWsjq3xsQ9ckJC" />
+        </div>
+    </nav>
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Side Control Panel -->
+        <aside
+            class="w-80 bg-surface-container border-r border-outline-variant flex flex-col p-container-padding gap-stack-lg z-40 overflow-y-auto">
+            <div class="flex flex-col gap-stack-sm">
+                <h2 class="font-headline-sm text-headline-sm text-primary">Simulation Parameters</h2>
+                <p class="font-label-xs text-label-xs text-on-surface-variant uppercase">Configure what-if scenario</p>
+            </div>
+            <div class="flex flex-col gap-stack-md">
+                <!-- Slider 1 -->
+                <div class="flex flex-col gap-unit">
+                    <div class="flex justify-between items-center">
+                        <label class="font-label-xs text-label-xs text-on-surface">Block Start Adj (min)</label>
+                        <span class="font-data-md text-data-md text-primary" id="val-start">+15</span>
+                    </div>
+                    <input class="w-full" max="60" min="-60"
+                        oninput="document.getElementById('val-start').innerText = (this.value &gt; 0 ? '+' : '') + this.value"
+                        type="range" value="15" />
+                </div>
+                <!-- Slider 2 -->
+                <div class="flex flex-col gap-unit">
+                    <div class="flex justify-between items-center">
+                        <label class="font-label-xs text-label-xs text-on-surface">Block Duration (hrs)</label>
+                        <span class="font-data-md text-data-md text-tertiary" id="val-dur">4.5</span>
+                    </div>
+                    <input class="w-full" max="12" min="1"
+                        oninput="document.getElementById('val-dur').innerText = this.value" step="0.5" type="range"
+                        value="4.5" />
+                </div>
+                <!-- Slider 3 -->
+                <div class="flex flex-col gap-unit">
+                    <div class="flex justify-between items-center">
+                        <label class="font-label-xs text-label-xs text-on-surface">Frght vs Pass. Priority</label>
+                        <span class="font-data-md text-data-md text-secondary" id="val-pri">60:40</span>
+                    </div>
+                    <input class="w-full" max="100" min="0"
+                        oninput="document.getElementById('val-pri').innerText = this.value + ':' + (100-this.value)"
+                        type="range" value="60" />
+                    <div
+                        class="flex justify-between font-label-xs text-label-xs text-outline text-[10px] uppercase mt-1">
+                        <span>Freight</span>
+                        <span>Passenger</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-auto pt-stack-md border-t border-outline-variant">
+                <button id="btn-reoptimize" onclick="runSimulation()"
+                    class="w-full bg-primary-container text-on-primary-container font-headline-sm text-headline-sm py-3 rounded-lg hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">sync</span>
+                    Re-optimize Scenario
+                </button>
+            </div>
+        </aside>
+        <!-- Main Canvas -->
+        <main class="flex-1 bg-background relative flex flex-col overflow-hidden p-container-padding gap-stack-lg">
+            <!-- Context & Delta Header -->
+            <div class="flex justify-between items-start z-10">
+                <div class="flex flex-col gap-unit">
+                    <h1 class="font-display-lg text-display-lg text-on-surface">Timeline Projection</h1>
+                    <div class="flex items-center gap-2 text-on-surface-variant font-label-xs text-label-xs uppercase">
+                        <span class="w-2 h-2 rounded-full bg-primary-container"></span> Civil Maintenance
+                        <span class="w-2 h-2 rounded-full bg-tertiary ml-4"></span> OHE Maintenance
+                    </div>
+                </div>
+                <!-- Animated Delta Card -->
+                <div
+                    class="bg-surface-container-high border border-outline p-stack-md rounded-xl flex gap-stack-lg items-center shadow-lg animate-delta">
+                    <div class="flex flex-col">
+                        <span class="font-label-xs text-label-xs text-on-surface-variant uppercase">Before -&gt; After
+                            Impact</span>
+                        <div class="flex items-end gap-2">
+                            <span id="delta-delay" class="font-data-lg text-data-lg text-primary">-42m</span>
+                            <span class="font-body-base text-body-base text-on-surface mb-0.5">Delay Reduced</span>
+                        </div>
+                    </div>
+                    <div class="w-px h-10 bg-outline-variant"></div>
+                    <div class="flex flex-col">
+                        <span class="font-label-xs text-label-xs text-on-surface-variant uppercase">Conflict
+                            Resolution</span>
+                        <div class="flex items-end gap-2">
+                            <span id="delta-conflicts"
+                                class="font-data-lg text-data-lg text-tertiary-container">2</span>
+                            <span class="font-body-base text-body-base text-on-surface mb-0.5">Resolved</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Gantt Chart Area -->
+            <div
+                class="flex-1 bg-surface border border-outline-variant rounded-xl overflow-hidden flex flex-col relative">
+                <!-- Timeline Header -->
+                <div
+                    class="h-10 border-b border-outline-variant flex items-center bg-surface-container text-on-surface-variant font-data-md text-data-md px-4">
+                    <div class="w-32 flex-shrink-0 border-r border-outline-variant h-full flex items-center">Resource
+                    </div>
+                    <div class="flex-1 flex justify-between px-4 h-full items-center">
+                        <span>08:00</span>
+                        <span>09:00</span>
+                        <span>10:00</span>
+                        <span>11:00</span>
+                        <span>12:00</span>
+                        <span>13:00</span>
+                    </div>
+                </div>
+                <!-- Grid Background -->
+                <div class="absolute inset-0 top-10 pointer-events-none flex pl-36">
+                    <div class="flex-1 flex justify-between border-x border-outline-variant/30">
+                        <div class="w-px h-full bg-outline-variant/30"></div>
+                        <div class="w-px h-full bg-outline-variant/30"></div>
+                        <div class="w-px h-full bg-outline-variant/30"></div>
+                        <div class="w-px h-full bg-outline-variant/30"></div>
+                        <div class="w-px h-full bg-outline-variant/30"></div>
+                        <div class="w-px h-full bg-outline-variant/30"></div>
+                    </div>
+                </div>
+                <!-- Gantt Rows -->
+                <div class="flex-1 overflow-y-auto relative z-10 flex flex-col">
+                    <!-- Row 1 -->
+                    <div
+                        class="h-16 border-b border-outline-variant/50 flex items-center hover:bg-surface-container/50 transition-colors">
+                        <div
+                            class="w-32 flex-shrink-0 font-label-xs text-label-xs text-on-surface px-4 border-r border-outline-variant/50 h-full flex flex-col justify-center">
+                            <span>Track 1A</span>
+                            <span class="text-on-surface-variant text-[10px]">Pass. Mainline</span>
+                        </div>
+                        <div class="flex-1 relative h-full">
+                            <!-- Gantt Bar -->
+                            <div
+                                class="absolute top-1/2 -translate-y-1/2 left-[10%] w-[30%] h-6 gantt-bar-civil rounded flex items-center px-2 shadow-[0_0_8px_rgba(103,80,164,0.4)]">
+                                <span class="font-data-md text-data-md text-white text-xs">TRN-4421</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div
+                        class="h-16 border-b border-outline-variant/50 flex items-center hover:bg-surface-container/50 transition-colors">
+                        <div
+                            class="w-32 flex-shrink-0 font-label-xs text-label-xs text-on-surface px-4 border-r border-outline-variant/50 h-full flex flex-col justify-center">
+                            <span>Track 1B</span>
+                            <span class="text-on-surface-variant text-[10px]">Freight Loop</span>
+                        </div>
+                        <div class="flex-1 relative h-full">
+                            <!-- Gantt Bar -->
+                            <div
+                                class="absolute top-1/2 -translate-y-1/2 left-[35%] w-[25%] h-6 gantt-bar-ohe rounded flex items-center px-2 shadow-[0_0_8px_rgba(231,195,101,0.4)]">
+                                <span class="font-data-md text-data-md text-on-tertiary text-xs">MNT-OHE-22</span>
+                            </div>
+                            <!-- Dependency Line -->
+                            <div class="absolute top-1/2 left-[30%] w-[5%] h-px bg-outline-variant"></div>
+                        </div>
+                    </div>
+                    <!-- Row 3 (With Risk Badge) -->
+                    <div class="h-24 border-b border-outline-variant/50 flex items-center bg-error-container/10">
+                        <div
+                            class="w-32 flex-shrink-0 font-label-xs text-label-xs text-on-surface px-4 border-r border-outline-variant/50 h-full flex flex-col justify-center">
+                            <span>Junction X</span>
+                            <span class="text-on-surface-variant text-[10px]">Critical Node</span>
+                        </div>
+                        <div class="flex-1 relative h-full">
+                            <!-- Conflict Area Highlight -->
+                            <div
+                                class="absolute inset-y-0 left-[55%] w-[15%] bg-error/5 border-l border-r border-error/20 pointer-events-none">
+                            </div>
+                            <!-- Gantt Bar 1 -->
+                            <div
+                                class="absolute top-4 left-[40%] w-[20%] h-6 gantt-bar-civil rounded flex items-center px-2 opacity-60">
+                                <span class="font-data-md text-data-md text-white text-xs">TRN-901</span>
+                            </div>
+                            <!-- Gantt Bar 2 (Conflict) -->
+                            <div
+                                class="absolute bottom-4 left-[50%] w-[25%] h-6 gantt-bar-conflict rounded flex items-center px-2 shadow-[0_0_12px_rgba(255,180,171,0.6)] border border-on-error relative z-20">
+                                <span class="font-data-md text-data-md text-on-error text-xs font-bold">FRT-X88</span>
+                                <!-- Risk Score Badge -->
+                                <div
+                                    class="absolute -top-10 left-1/2 -translate-x-1/2 bg-surface-container-highest border border-error px-3 py-1 rounded-full flex items-center gap-1 shadow-lg whitespace-nowrap">
+                                    <span class="material-symbols-outlined text-error text-sm"
+                                        style="font-variation-settings: 'FILL' 1;">warning</span>
+                                    <span
+                                        class="font-label-xs text-label-xs text-error font-bold uppercase tracking-wider">Risk
+                                        Score: 88</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 4 -->
+                    <div
+                        class="h-16 border-b border-outline-variant/50 flex items-center hover:bg-surface-container/50 transition-colors">
+                        <div
+                            class="w-32 flex-shrink-0 font-label-xs text-label-xs text-on-surface px-4 border-r border-outline-variant/50 h-full flex flex-col justify-center">
+                            <span>Block Sec 4</span>
+                            <span class="text-on-surface-variant text-[10px]">Civil Works</span>
+                        </div>
+                        <div class="flex-1 relative h-full">
+                            <!-- Gantt Bar -->
+                            <div
+                                class="absolute top-1/2 -translate-y-1/2 left-[70%] w-[20%] h-6 bg-surface-variant border border-outline border-dashed rounded flex items-center px-2">
+                                <span class="font-data-md text-data-md text-on-surface-variant text-xs">PROPOSED
+                                    BLK</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+<script>
+async function runSimulation() {
+    const btn = document.getElementById('btn-reoptimize');
+    if (btn) { btn.disabled = true; btn.textContent = 'Optimizing...'; }
+
+    // Read slider values if available
+    const sliders = document.querySelectorAll('input[type=range]');
+    const startAdj = sliders[0] ? parseInt(sliders[0].value) : 15;
+    const duration = sliders[1] ? parseFloat(sliders[1].value) : 4.5;
+    const freightPriority = sliders[2] ? parseInt(sliders[2].value) : 60;
+
+    // Build modified blocks by adjusting existing blocks
+    let blocks = [];
+    try {
+        const blocksRes = await fetch('/api/merge-blocks', { method: 'POST' });
+        if (blocksRes.ok) {
+            const bData = await blocksRes.json();
+            blocks = (bData.integrated_blocks || []).map(b => ({
+                ...b,
+                start_min: b.start_min + startAdj,
+                end_min: b.end_min + startAdj + Math.round((duration - b.duration_min / 60) * 60),
+                duration_min: Math.round(duration * 60)
+            }));
+        }
+    } catch(e) {}
+
+    try {
+        const res = await fetch('/api/what-if', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ modified_blocks: blocks, merge_window_minutes: 120 })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            const baseDel = (data.base_kpis || {}).total_system_delay_minutes || 0;
+            const newDel = (data.whatif_kpis || {}).total_system_delay_minutes || 0;
+            const delta = baseDel - newDel;
+            const confBase = (data.base_kpis || {}).track_conflicts_resolved || 0;
+            const confNew = (data.whatif_kpis || {}).track_conflicts_resolved || 0;
+            const delEl = document.getElementById('delta-delay');
+            const confEl = document.getElementById('delta-conflicts');
+            if (delEl) delEl.textContent = (delta >= 0 ? '-' : '+') + Math.abs(Math.round(delta)) + 'm';
+            if (confEl) confEl.textContent = confNew || confBase;
+            console.log('[AVAIL Sim] What-if result:', data.comparison_diff);
+        }
+    } catch(e) { console.warn('What-if failed:', e); }
+    finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-outlined">sync</span> Re-optimize Scenario';
+        }
+    }
+}
+document.addEventListener('DOMContentLoaded', runSimulation);
+</script>
+</body>
+
+</html>

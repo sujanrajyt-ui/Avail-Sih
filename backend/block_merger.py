@@ -125,6 +125,12 @@ class BlockMerger:
             siloed_group_mins = sum(r["preferred_end_min"] - r["preferred_start_min"] for r in req_group)
             hours_saved_in_group = (siloed_group_mins - integrated_duration) / 60.0
 
+            # Calculate predicted delay risk score for this block's segment
+            from backend.predictive_model import TravelTimePredictor
+            predictor = TravelTimePredictor()
+            seg_length = 195.0 # default length if unknown
+            risk_score = predictor.get_segment_risk_score(segment_length_km=seg_length, max_speed_kmph=min_speed_restriction or 120, congestion_index=0.6)
+
             integrated_blocks.append({
                 "block_id": f"ICB-{block_id_counter:03d}",
                 "segment": segment,
@@ -144,7 +150,8 @@ class BlockMerger:
                 "speed_restriction_kmph": min_speed_restriction,
                 "siloed_hours_sum": round(siloed_group_mins / 60.0, 2),
                 "integrated_hours": round(integrated_duration / 60.0, 2),
-                "hours_saved": round(max(0, hours_saved_in_group), 2)
+                "hours_saved": round(max(0, hours_saved_in_group), 2),
+                "predicted_delay_risk": risk_score
             })
             block_id_counter += 1
 
