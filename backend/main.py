@@ -101,8 +101,8 @@ class WhatIfScenarioModel(BaseModel):
     merge_window_minutes: Optional[int] = Field(120, ge=15, le=360)
     headway_buffer_minutes: Optional[int] = Field(4, ge=1, le=15)
 
-@app.get("/")
-def read_root():
+@app.get("/api/system-info")
+def get_system_info():
     return {
         "system": "AVAIL - Asset Visibility & Availability through Intelligent Logistics",
         "hackathon": "Smart India Hackathon 2026 (SIH26027)",
@@ -401,6 +401,30 @@ def get_failure_model_info():
         "test_split": "80/20 stratified (metrics reported on held-out set ONLY)",
         "feature_importances": failure_engine.feature_importances
     }
+
+# ── React SPA Static Serving ──────────────────────────────────────────────────
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
+
+if os.path.exists(DIST_DIR):
+    assets_dir = os.path.join(DIST_DIR, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/")
+    async def serve_react_root():
+        return FileResponse(os.path.join(DIST_DIR, "index.html"))
+
+    @app.get("/{full_path:path}")
+    async def serve_react_app(full_path: str):
+        if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("openapi.json"):
+            raise HTTPException(status_code=404, detail="Not Found")
+        target_file = os.path.join(DIST_DIR, full_path)
+        if full_path and os.path.exists(target_file) and os.path.isfile(target_file):
+            return FileResponse(target_file)
+        return FileResponse(os.path.join(DIST_DIR, "index.html"))
 
 if __name__ == "__main__":
     import uvicorn
