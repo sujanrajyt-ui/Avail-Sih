@@ -14,11 +14,26 @@ import sys
 import os
 import webbrowser
 
+def kill_existing_port_process(port=8000):
+    """Kills any process currently listening on the specified port (Windows/Linux)."""
+    try:
+        if os.name == 'nt':
+            cmd = f'for /f "tokens=5" %a in (\'netstat -aon ^| findstr :{port} ^| findstr LISTENING\') do taskkill /f /pid %a'
+            subprocess.run(cmd, shell=True, capture_output=True)
+        else:
+            cmd = f'fuser -k {port}/tcp'
+            subprocess.run(cmd, shell=True, capture_output=True)
+    except Exception:
+        pass
+
 def main():
     print("=" * 70)
     print(" 🚆 AVAIL Autonomous AI System Launcher — SIH26027")
     print("    Team Durga Ghee Podi Dosa | New Delhi - Howrah Main Line Corridor")
     print("=" * 70)
+
+    kill_existing_port_process(8000)
+    time.sleep(0.5)
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
