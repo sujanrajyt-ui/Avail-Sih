@@ -1,12 +1,13 @@
 import React from 'react';
-import { Bot, RefreshCw, LayoutDashboard, Cpu, Network, GanttChartSquare, Sliders, FileSpreadsheet, ShieldCheck, BookOpen } from 'lucide-react';
+import { Bot, RefreshCw, LayoutDashboard, Cpu, Network, GanttChartSquare, Sliders, FileSpreadsheet, ShieldCheck, BookOpen, Navigation, Lock, Play } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize }) {
+export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize, onOpenAuth, onStartDemo }) {
     const tabs = [
         { id: 'dashboard', label: 'Executive Dashboard', icon: LayoutDashboard },
         { id: 'pipeline', label: 'Box 2: ML Pipeline', icon: Cpu },
         { id: 'twin', label: 'Box 3: Digital Twin Graph', icon: Network },
         { id: 'gantt', label: 'Box 5: Corridor Gantt', icon: GanttChartSquare },
+        { id: 'map', label: 'Box 5: GIS Route Map', icon: Navigation },
         { id: 'simulation', label: 'What-If Simulator', icon: Sliders },
         { id: 'audit', label: 'CAG Research & Audit', icon: BookOpen },
         { id: 'reports', label: 'Requests & Export', icon: FileSpreadsheet }
@@ -53,16 +54,30 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
                 })}
             </nav>
 
-            {/* Action Button (Fitts's Law) */}
-            <div className="flex items-center gap-3">
-                <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium">
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>0 Track Collisions Guaranteed</span>
-                </div>
+            {/* Action Buttons (Fitts's Law) */}
+            <div className="flex items-center gap-2">
+                <button
+                    onClick={onStartDemo}
+                    className="flex items-center gap-1.5 bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/40 text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-lg shadow-purple-500/15"
+                    title="Start Guided Presentation Tour"
+                >
+                    <Play className="w-3.5 h-3.5 text-purple-400 fill-purple-400" />
+                    <span>Judges Tour</span>
+                </button>
+
+                <button
+                    onClick={onOpenAuth}
+                    className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold px-3 py-2 rounded-xl transition-all"
+                    title="Simulate Enterprise Dual-Factor OTP Authentication"
+                >
+                    <Lock className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="hidden sm:inline">OTP Auth</span>
+                </button>
+
                 <button
                     onClick={onReoptimize}
                     disabled={isOptimizing}
-                    className="flex items-center gap-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-cyan-500/25 active:scale-95 disabled:opacity-50"
+                    className="flex items-center gap-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-extrabold text-xs px-4 py-2 rounded-xl transition-all shadow-lg shadow-cyan-500/25 active:scale-95 disabled:opacity-50"
                 >
                     <RefreshCw className={`w-4 h-4 ${isOptimizing ? 'animate-spin' : ''}`} />
                     <span>{isOptimizing ? 'AI Optimizing...' : 'Run Auto-Optimizer'}</span>
