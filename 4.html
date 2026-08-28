@@ -461,80 +461,64 @@
             </div>
         </main>
     </div>
+
+
 <script>
-async function downloadCSV() {
-    try {
-        const res = await fetch('/api/optimize', { method: 'POST' });
-        const data = await res.json();
-        const trains = (data.optimization || {}).optimized_timetable || [];
-        const blocks = data.integrated_blocks || [];
-        let csv = 'Block_ID,Segment,Departments,Start,End,Hours_Saved,Risk_Score\n';
-        blocks.forEach(b => {
-            csv += [b.block_id, b.segment, (b.departments||[]).join('+'), b.start_time_str, b.end_time_str,
-                    b.hours_saved, (b.predicted_delay_risk||0).toFixed(2)].join(',') + '\n';
-        });
-        const link = document.createElement('a');
-        link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-        link.download = 'avail_block_schedule_' + new Date().toISOString().split('T')[0] + '.csv';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        console.log('[AVAIL] CSV with', blocks.length, 'blocks exported.');
-    } catch(e) {
-        alert('Export failed - using fallback data.');
-        const link = document.createElement('a');
-        link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(
-            'Block_ID,Segment,Departments,Start,End,Hours_Saved\nICB-001,CNB-PRYJ,Civil+OHE+S%26T,06:00,10:30,3.0\nICB-002,DDU-GAYA,Civil+OHE,13:00,17:30,2.5\nICB-003,GAYA-DHN,S%26T,02:00,05:00,1.5\nICB-004,DHN-ASN,Civil,10:00,14:00,0.5\n'
-        );
-        link.download = 'avail_block_schedule.csv';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+(function(){
+function el(id){return document.getElementById(id);}
+async function downloadCSV(){
+  try{
+    var bRes=await fetch('/api/merge-blocks');
+    var data=await bRes.json();
+    var blocks=data.integrated_blocks||[];
+    var csv='Block_ID,Segment,Departments,Start,End,Duration_h,Hours_Saved,Risk_Score\n';
+    blocks.forEach(function(b){
+      csv+=[b.block_id,b.segment,(b.departments||[]).join('+'),b.start_time_str,b.end_time_str,b.integrated_hours,b.hours_saved,(b.predicted_delay_risk||0).toFixed(2)].join(',')+' \n';
+    });
+    var link=document.createElement('a');
+    link.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    link.download='avail_block_schedule_'+new Date().toISOString().split('T')[0]+'.csv';
+    document.body.appendChild(link);link.click();document.body.removeChild(link);
+  }catch(e){alert('Export failed: '+e.message);}
 }
-
-async function submitBlockRequest(event) {
-    event.preventDefault();
-    const form = event.target;
-    const fd = new FormData(form);
-    const now = new Date();
-    const startH = parseInt(fd.get('start_time') || '14') || 14;
-    const durationH = parseFloat(fd.get('duration') || '4') || 4;
-    const payload = {
-        request_id: 'REQ-' + Date.now(),
-        department: fd.get('department') || 'Civil',
-        department_code: (fd.get('department') || 'CIVIL').substring(0, 3).toUpperCase(),
-        segment: (fd.get('from_station') || 'NDLS') + '-' + (fd.get('to_station') || 'CNB'),
-        from_station: fd.get('from_station') || 'NDLS',
-        to_station: fd.get('to_station') || 'CNB',
-        work_type: fd.get('work_type') || 'Maintenance work',
-        preferred_start_min: startH * 60,
-        preferred_end_min: startH * 60 + Math.round(durationH * 60),
-        min_duration_min: Math.round(durationH * 60),
-        priority: parseInt(fd.get('priority') || '2'),
-        track_affected: fd.get('track_affected') || 'DOWN_LINE',
-        required_speed_restriction_kmph: parseInt(fd.get('speed_restriction') || '30')
-    };
-    try {
-        const res = await fetch('/api/requests', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-            const d = await res.json();
-            alert('Request submitted! Total requests: ' + d.total_requests);
-            form.reset();
-        } else {
-            const err = await res.json();
-            alert('Validation Error: ' + JSON.stringify(err.detail));
-        }
-    } catch(e) { alert('Submission failed: ' + e.message); }
+async function submitBlockRequest(event){
+  event.preventDefault();
+  var fd=new FormData(event.target);
+  var dept=fd.get('department')||'Civil';
+  var from_st=fd.get('from_station')||'NDLS';
+  var to_st=fd.get('to_station')||'CNB';
+  var startH=parseInt(fd.get('start_hour')||'14')||14;
+  var endH=parseInt(fd.get('end_hour')||'18')||18;
+  var code=dept==='Civil'?'CIV':(dept.startsWith('OHE')?'OHE':'ST');
+  var payload={
+    request_id:'REQ-UI-'+Date.now(),
+    department:dept,department_code:code,
+    segment:from_st+'-'+to_st,from_station:from_st,to_station:to_st,
+    work_type:fd.get('work_type')||'Track Maintenance',
+    preferred_start_min:startH*60,preferred_end_min:endH*60,
+    min_duration_min:(endH-startH)*60,priority:parseInt(fd.get('priority')||'2'),
+    track_affected:fd.get('track_affected')||'DOWN_LINE',
+    required_speed_restriction_kmph:parseInt(fd.get('speed_restriction')||'30')
+  };
+  try{
+    var res=await fetch('/api/requests',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var d=await res.json();
+    if(res.ok){alert('Request submitted! Total active requests: '+d.total_requests);event.target.reset();}
+    else{alert('Validation Error: '+JSON.stringify(d.detail));}
+  }catch(e){alert('Submission failed: '+e.message);}
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form');
-    if (form) form.addEventListener('submit', submitBlockRequest);
+document.addEventListener('DOMContentLoaded',function(){
+  var csvBtn=document.querySelector('button[onclick*="downloadCSV"],#btn-csv-export');
+  if(csvBtn)csvBtn.onclick=function(){downloadCSV();};
+  else{
+    document.querySelectorAll('button').forEach(function(b){
+      if(b.textContent.includes('Download CSV'))b.onclick=function(){downloadCSV();};
+    });
+  }
+  var form=document.querySelector('form');
+  if(form)form.addEventListener('submit',submitBlockRequest);
 });
+})();
 </script>
 </body>
 

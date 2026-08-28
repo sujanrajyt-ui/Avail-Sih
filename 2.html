@@ -410,115 +410,22 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Scrollable Gantt Body -->
-                <div class="flex-1 overflow-auto relative">
-                    <!-- Background Grid Pattern -->
-                    <div class="absolute inset-0 gantt-grid opacity-30 pointer-events-none z-0"></div>
-                    <!-- Row 1: NDLS-CNB -->
-                    <div
-                        class="flex border-b border-surface-container-high h-16 group hover:bg-surface-variant/30 transition-colors relative z-10 bg-surface">
-                        <div
-                            class="w-48 shrink-0 border-r border-outline-variant flex items-center px-4 bg-surface group-hover:bg-surface-variant/30 transition-colors z-20">
-                            <span class="font-data-md text-data-md text-on-surface">NDLS-CNB</span>
-                        </div>
-                        <div class="flex-1 relative">
-                            <!-- Maintenance Block: Gold (Civil) | 01:00 to 04:00 (left: ~4.1%, width: ~12.5%) -->
-                            <div class="absolute top-2 bottom-2 rounded border"
-                                style="left: 4.16%; width: 12.5%; background-color: rgba(231,195,101,0.15); border-color: rgba(231,195,101,0.5); box-shadow: inset 0 0 10px rgba(231,195,101,0.1);">
-                                <div class="w-full h-full pattern-diagonal-lines opacity-20" style="color: #e7c365;">
-                                </div>
-                            </div>
-                            <!-- Train Bar -->
-                            <div class="absolute top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-on-surface shadow-[0_0_5px_rgba(255,255,255,0.5)] z-10"
-                                style="left: 10%; width: 25%;"></div>
-                            <div class="absolute top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-on-surface shadow-[0_0_5px_rgba(255,255,255,0.5)] z-10"
-                                style="left: 45%; width: 15%;"></div>
-                        </div>
-                    </div>
-                    <!-- Row 2: CNB-PRYJ (Target for Tooltip) -->
-                    <div
-                        class="flex border-b border-surface-container-high h-16 group hover:bg-surface-variant/30 transition-colors relative z-10 bg-background">
-                        <div
-                            class="w-48 shrink-0 border-r border-outline-variant flex items-center px-4 bg-background group-hover:bg-surface-variant/30 transition-colors z-20">
-                            <span class="font-data-md text-data-md text-on-surface">CNB-PRYJ</span>
-                        </div>
-                        <div class="flex-1 relative">
-                            <!-- Train Bars -->
-                            <div class="absolute top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-on-surface-variant z-10 opacity-50"
-                                style="left: 5%; width: 8%;"></div>
-                            <div class="absolute top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-on-surface shadow-[0_0_5px_rgba(255,255,255,0.5)] z-10"
-                                style="left: 35%; width: 30%;"></div>
-                            <!-- Maintenance Block: Cyan (OHE) | 02:00 to 05:00 (left: 8.33%, width: 12.5%) WITH TOOLTIP -->
-                            <div class="absolute top-2 bottom-2 rounded border cursor-pointer z-20 block-hover-trigger"
-                                style="left: 8.33%; width: 12.5%; background-color: rgba(0,229,255,0.2); border-color: rgba(0,229,255,0.8); box-shadow: 0 0 12px rgba(0,229,255,0.3);">
-                                <!-- Tooltip (Simulated on Hover) -->
-                                <div
-                                    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-surface-container-high border border-[#00E5FF]/50 rounded shadow-xl shadow-black p-3 opacity-0 pointer-events-none transition-opacity duration-200 z-50 flex flex-col gap-2 backdrop-blur-md tooltip-content">
-                                    <div class="flex items-center justify-between border-b border-outline-variant pb-1">
-                                        <span class="font-headline-sm text-headline-sm text-[#00E5FF]">OHE Block</span>
-                                        <span
-                                            class="font-data-md text-[10px] text-on-surface-variant border border-outline-variant px-1 rounded bg-surface">02:00-05:00</span>
-                                    </div>
-                                    <div class="font-data-md text-data-md text-on-surface">CNB-PRYJ Maintenance</div>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <span
-                                            class="material-symbols-outlined text-[14px] text-tertiary">check_circle</span>
-                                        <span class="font-label-xs text-label-xs text-tertiary">Status: Optimized</span>
-                                    </div>
-                                    <!-- Triangle pointer -->
-                                    <div
-                                        class="absolute top-full left-1/2 -translate-x-1/2 border-solid border-t-surface-container-high border-t-8 border-x-transparent border-x-8 border-b-0">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Row 3: PRYJ-DDU -->
-                    <div
-                        class="flex border-b border-surface-container-high h-16 group hover:bg-surface-variant/30 transition-colors relative z-10 bg-surface">
-                        <div
-                            class="w-48 shrink-0 border-r border-outline-variant flex items-center px-4 bg-surface group-hover:bg-surface-variant/30 transition-colors z-20">
-                            <span class="font-data-md text-data-md text-on-surface">PRYJ-DDU</span>
-                        </div>
-                        <div class="flex-1 relative">
-                            <!-- Maintenance Block: Magenta (S&T) | 14:00 to 18:00 (left: ~58.3%, width: ~16.6%) -->
-                            <div class="absolute top-2 bottom-2 rounded border"
-                                style="left: 58.33%; width: 16.66%; background-color: rgba(255,0,255,0.15); border-color: rgba(255,0,255,0.5); box-shadow: inset 0 0 10px rgba(255,0,255,0.1);">
-                            </div>
-                            <!-- Train Bar -->
-                            <div class="absolute top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-on-surface shadow-[0_0_5px_rgba(255,255,255,0.5)] z-10"
-                                style="left: 20%; width: 40%;"></div>
-                            <div class="absolute top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-error rounded-none z-10 opacity-80 shadow-[0_0_8px_rgba(255,180,171,0.6)]"
-                                style="left: 70%; width: 5%;"></div>
-                        </div>
-                    </div>
-                    <!-- Row 4: DDU-PNBE -->
-                    <div
-                        class="flex border-b border-surface-container-high h-16 group hover:bg-surface-variant/30 transition-colors relative z-10 bg-background">
-                        <div
-                            class="w-48 shrink-0 border-r border-outline-variant flex items-center px-4 bg-background group-hover:bg-surface-variant/30 transition-colors z-20">
-                            <span
-                                class="font-data-md text-data-md text-on-surface text-on-surface-variant">DDU-PNBE</span>
-                        </div>
-                        <div class="flex-1 relative">
-                            <!-- Train Bars only -->
-                            <div class="absolute top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-on-surface shadow-[0_0_5px_rgba(255,255,255,0.5)] z-10"
-                                style="left: 60%; width: 35%;"></div>
-                        </div>
+                <!-- Live Gantt Body — populated by /api/merge-blocks -->
+                <div id="gantt-blocks-container" class="flex-1 overflow-y-auto flex flex-col" style="min-height:280px">
+                    <div class="flex flex-col items-center justify-center flex-1 text-on-surface-variant gap-2" style="padding:2rem">
+                        <span class="material-symbols-outlined text-primary" style="font-size:2.5rem;opacity:0.6">timeline</span>
+                        <span class="text-sm">Loading live block schedule…</span>
                     </div>
                 </div>
+        <!-- Bottom Status Bar (Atmospheric detail) -->
+        <div class="flex justify-between items-center px-2 shrink-0 h-6 border-t border-outline-variant/30 mt-[-16px]">
+            <div class="flex items-center gap-4">
+                <span class="font-data-md text-[10px] text-on-surface-variant flex items-center gap-1"><span
+                        class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> System Optimal</span>
+                <span class="font-data-md text-[10px] text-on-surface-variant">Last sync: 2 sec ago</span>
             </div>
-            <!-- Bottom Status Bar (Atmospheric detail) -->
-            <div
-                class="flex justify-between items-center px-2 shrink-0 h-6 border-t border-outline-variant/30 mt-[-16px]">
-                <div class="flex items-center gap-4">
-                    <span class="font-data-md text-[10px] text-on-surface-variant flex items-center gap-1"><span
-                            class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> System Optimal</span>
-                    <span class="font-data-md text-[10px] text-on-surface-variant">Last sync: 2 sec ago</span>
-                </div>
-                <div class="font-data-md text-[10px] text-on-surface-variant">Projected Resolution: 100%</div>
-            </div>
+            <div class="font-data-md text-[10px] text-on-surface-variant">Projected Resolution: 100%</div>
+        </div>
         </div>
     </main>
     <style>
@@ -528,30 +435,54 @@
             opacity: 1;
         }
     </style>
-<script>
-async function loadGantt() {
-    try {
-        const res = await fetch('/api/optimize', { method: 'POST' });
-        if (!res.ok) return;
-        const data = await res.json();
-        const blocks = data.integrated_blocks || [];
-        const trains = (data.optimization || {}).optimized_timetable || [];
 
-        // Update metrics row if present
-        const m = data.merger_summary || {};
-        const kpis = (data.optimization || {}).kpis || {};
-        const savedEl = document.getElementById('gantt-hours-saved');
-        const conflEl = document.getElementById('gantt-conflicts');
-        const solveEl = document.getElementById('gantt-solve-time');
-        if (savedEl) savedEl.textContent = (m.corridor_hours_saved || 7.5) + 'h';
-        if (conflEl) conflEl.textContent = (kpis.track_conflicts_resolved || 51) + ' resolved';
-        if (solveEl) solveEl.textContent = (kpis.solve_duration_sec || 0.128) + 's';
 
-        console.log('[AVAIL Gantt] Loaded', blocks.length, 'blocks,', trains.length, 'trains from API');
-    } catch(e) { console.warn('Gantt load failed:', e); }
-}
-document.addEventListener('DOMContentLoaded', loadGantt);
-</script>
+    <script>
+            (function () {
+                function el(id) { return document.getElementById(id); }
+                var DEPT_COLORS = { "Civil": "#e7c365", "OHE (Electrical)": "#a3defe", "S&T (Signalling)": "#f472b6" };
+                async function loadGantt() {
+                    try {
+                        var mRes = await fetch('/api/metrics');
+                        if (mRes.ok) {
+                            var m = await mRes.json();
+                            if (el('gantt-hours-saved')) el('gantt-hours-saved').textContent = parseFloat(m.corridor_hours_saved || 7.5).toFixed(1) + 'h';
+                            if (el('gantt-conflicts')) el('gantt-conflicts').textContent = (m.track_conflicts_resolved || 51) + ' resolved';
+                            if (el('gantt-solve-time')) el('gantt-solve-time').textContent = parseFloat(m.cp_sat_solve_duration_sec || 0.128).toFixed(3) + 's';
+                            if (el('gantt-idle-reduction')) el('gantt-idle-reduction').textContent = parseFloat(m.idle_block_reduction_pct || 37.5).toFixed(1) + '%';
+                        }
+                        var bRes = await fetch('/api/merge-blocks');
+                        if (bRes.ok) {
+                            var data = await bRes.json();
+                            var blocks = data.integrated_blocks || [];
+                            var container = el('gantt-blocks-container');
+                            if (container && blocks.length > 0) {
+                                container.innerHTML = '';
+                                var totalMinutes = 1440;
+                                blocks.forEach(function (b) {
+                                    var dept = (b.departments || [])[0] || 'Civil';
+                                    var color = DEPT_COLORS[dept] || '#e7c365';
+                                    var leftPct = (b.start_min / totalMinutes) * 100;
+                                    var widthPct = ((b.end_min - b.start_min) / totalMinutes) * 100;
+                                    var row = document.createElement('div');
+                                    row.className = 'relative flex items-center gap-2 py-1';
+                                    row.innerHTML = '<span class="text-xs text-on-surface-variant w-16 shrink-0">' + b.block_id + '</span>'
+                                        + '<div class="flex-1 h-6 bg-surface-variant rounded relative overflow-hidden">'
+                                        + '<div class="absolute h-full rounded flex items-center px-2 text-xs font-bold" '
+                                        + 'style="left:' + Math.min(leftPct, 95) + '%;width:' + Math.max(widthPct, 5) + '%;background:' + color + '40;border:1px solid ' + color + ';color:' + color + '">'
+                                        + b.segment
+                                        + '</div>'
+                                        + '</div>'
+                                        + '<span class="text-xs text-outline shrink-0">' + b.start_time_str + '–' + b.end_time_str + '</span>';
+                                    container.appendChild(row);
+                                });
+                            }
+                        }
+                    } catch (e) { console.warn('[AVAIL] Gantt fetch failed:', e); }
+                }
+                document.addEventListener('DOMContentLoaded', loadGantt);
+            })();
+    </script>
 </body>
 
 </html>

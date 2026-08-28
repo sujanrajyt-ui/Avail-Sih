@@ -490,139 +490,68 @@
                     <div class="p-stack-md border-b border-outline-variant bg-surface-container-low">
                         <h3 class="font-headline-sm text-headline-sm text-on-surface">Integrated Corridor Blocks</h3>
                     </div>
-                    <div class="flex-1 overflow-y-auto p-2 space-y-1">
-                        <!-- Block Item 1 -->
-                        <div
-                            class="flex flex-col p-3 rounded bg-surface hover:bg-surface-variant transition-colors cursor-pointer border-l-2 border-[#e7c365]">
-                            <div class="flex justify-between items-start mb-1">
-                                <span class="font-data-md text-data-md text-on-surface">BLK-092A</span>
-                                <span
-                                    class="px-2 py-0.5 rounded-full bg-[#e7c365]/10 text-[#e7c365] border border-[#e7c365]/30 font-label-xs text-label-xs">Civil</span>
-                            </div>
-                            <span class="font-body-base text-body-base text-on-surface-variant text-sm truncate">Track
-                                Maintenance NDLS-CNB</span>
-                            <div class="flex items-center gap-4 mt-2 font-data-md text-data-md text-xs text-outline">
-                                <span class="flex items-center gap-1"><span
-                                        class="material-symbols-outlined text-[14px]">schedule</span> 14:00 -
-                                    18:00</span>
-                            </div>
-                        </div>
-                        <!-- Block Item 2 -->
-                        <div
-                            class="flex flex-col p-3 rounded bg-surface hover:bg-surface-variant transition-colors cursor-pointer border-l-2 border-[#a3defe]">
-                            <div class="flex justify-between items-start mb-1">
-                                <span class="font-data-md text-data-md text-on-surface">OHE-114B</span>
-                                <span
-                                    class="px-2 py-0.5 rounded-full bg-[#a3defe]/10 text-[#a3defe] border border-[#a3defe]/30 font-label-xs text-label-xs">OHE</span>
-                            </div>
-                            <span
-                                class="font-body-base text-body-base text-on-surface-variant text-sm truncate">Catenary
-                                Tensioning PRYJ Sector</span>
-                            <div class="flex items-center gap-4 mt-2 font-data-md text-data-md text-xs text-outline">
-                                <span class="flex items-center gap-1"><span
-                                        class="material-symbols-outlined text-[14px]">schedule</span> 09:30 -
-                                    11:45</span>
-                                <span class="text-error font-bold flex items-center gap-1"><span
-                                        class="material-symbols-outlined text-[14px]">warning</span> Conflict</span>
-                            </div>
-                        </div>
-                        <!-- Block Item 3 -->
-                        <div
-                            class="flex flex-col p-3 rounded bg-[#0A0F1E] hover:bg-surface-variant transition-colors cursor-pointer border-l-2 border-[#f472b6]">
-                            <div class="flex justify-between items-start mb-1">
-                                <span class="font-data-md text-data-md text-on-surface">ST-442C</span>
-                                <span
-                                    class="px-2 py-0.5 rounded-full bg-[#f472b6]/10 text-[#f472b6] border border-[#f472b6]/30 font-label-xs text-label-xs">S&amp;T</span>
-                            </div>
-                            <span class="font-body-base text-body-base text-on-surface-variant text-sm truncate">Signal
-                                Interlocking Test DDU</span>
-                            <div class="flex items-center gap-4 mt-2 font-data-md text-data-md text-xs text-outline">
-                                <span class="flex items-center gap-1"><span
-                                        class="material-symbols-outlined text-[14px]">schedule</span> 22:00 -
-                                    04:00</span>
-                            </div>
-                        </div>
-                        <!-- Block Item 4 -->
-                        <div
-                            class="flex flex-col p-3 rounded bg-surface hover:bg-surface-variant transition-colors cursor-pointer border-l-2 border-[#e7c365]">
-                            <div class="flex justify-between items-start mb-1">
-                                <span class="font-data-md text-data-md text-on-surface">BLK-093D</span>
-                                <span
-                                    class="px-2 py-0.5 rounded-full bg-[#e7c365]/10 text-[#e7c365] border border-[#e7c365]/30 font-label-xs text-label-xs">Civil</span>
-                            </div>
-                            <span class="font-body-base text-body-base text-on-surface-variant text-sm truncate">Ballast
-                                Cleaning HWH Yard</span>
-                            <div class="flex items-center gap-4 mt-2 font-data-md text-data-md text-xs text-outline">
-                                <span class="flex items-center gap-1"><span
-                                        class="material-symbols-outlined text-[14px]">schedule</span> 10:00 -
-                                    16:00</span>
-                            </div>
+                    <div id="blocks-list" class="flex-1 overflow-y-auto p-2 space-y-1">
+                        <!-- Loading state -->
+                        <div class="flex flex-col items-center justify-center h-24 text-on-surface-variant">
+                            <span class="material-symbols-outlined animate-spin text-primary">refresh</span>
+                            <span class="text-xs mt-2">Loading live blocks...</span>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
+    
+
 <script>
-const DEPT_COLORS = { "Civil": "#e7c365", "OHE (Electrical)": "#a3defe", "S&T (Signalling)": "#f472b6" };
-const DEPT_LABELS = { "Civil": "Civil", "OHE (Electrical)": "OHE", "S&T (Signalling)": "S&T" };
-
-async function loadDashboard() {
-    try {
-        const [metricsRes, blocksRes] = await Promise.all([
-            fetch('/api/metrics'),
-            fetch('/api/merge-blocks', { method: 'POST' })
-        ]);
-        if (metricsRes.ok) {
-            const m = await metricsRes.json();
-            const idle = m.idle_block_reduction_pct || m.idle_reduction_pct || 37.5;
-            const hours = m.corridor_hours_saved || m.hours_saved || 7.5;
-            const solveSec = m.cp_sat_solve_duration_sec || m.solve_time_sec || 0.128;
-            const conflicts = m.track_conflicts_resolved || m.conflicts_resolved || 51;
-
-            const elIdle = document.getElementById('kpi-idle-reduction');
-            const elHours = document.getElementById('kpi-hours-saved');
-            const elSolve = document.getElementById('kpi-solve-time');
-            const elConfl = document.getElementById('kpi-conflicts-resolved');
-
-            if (elIdle) elIdle.textContent = parseFloat(idle).toFixed(1) + '%';
-            if (elHours) elHours.textContent = parseFloat(hours).toFixed(2) + 'h';
-            if (elSolve) elSolve.textContent = parseFloat(solveSec).toFixed(3) + 's';
-            if (elConfl) elConfl.textContent = conflicts;
-        }
-        if (blocksRes.ok) {
-            const data = await blocksRes.json();
-            const blocks = data.integrated_blocks || [];
-            const container = document.getElementById('blocks-list');
-            if (container && blocks.length > 0) {
-                container.innerHTML = '';
-                blocks.forEach(b => {
-                    const depts = (b.departments || []);
-                    const dept = depts[0] || 'Civil';
-                    const color = DEPT_COLORS[dept] || '#e7c365';
-                    const label = depts.map(d => DEPT_LABELS[d] || d).join(' + ');
-                    const el = document.createElement('div');
-                    el.className = 'flex flex-col p-3 rounded bg-surface hover:bg-surface-variant transition-colors cursor-pointer border-l-2';
-                    el.style.borderColor = color;
-                    el.innerHTML = `
-                        <div class="flex justify-between items-start mb-1">
-                            <span class="font-data-md text-data-md text-on-surface">${b.block_id}</span>
-                            <span class="px-2 py-0.5 rounded-full font-label-xs text-label-xs border" style="color:${color};border-color:${color}40;background:${color}15">${label}</span>
-                        </div>
-                        <span class="text-on-surface-variant text-sm truncate">${(b.work_descriptions || ['Integrated Maintenance'])[0]}</span>
-                        <div class="flex items-center gap-4 mt-2 text-xs text-outline">
-                            <span>&#9201; ${b.start_time_str} - ${b.end_time_str}</span>
-                            <span style="color:#4ade80">&#x2714; ${b.hours_saved}h saved</span>
-                            ${(b.predicted_delay_risk > 0.5) ? '<span style="color:#f472b6">&#9888; High Risk</span>' : ''}
-                        </div>`;
-                    container.appendChild(el);
-                });
-            }
-        }
-    } catch(e) { console.warn('Dashboard load failed (using fallback values):', e); }
+(function(){
+var DEPT_COLORS={"Civil":"#e7c365","OHE (Electrical)":"#a3defe","S&T (Signalling)":"#f472b6"};
+var DEPT_LABELS={"Civil":"Civil","OHE (Electrical)":"OHE","S&T (Signalling)":"S&T"};
+function el(id){return document.getElementById(id);}
+async function loadDashboard(){
+  try{
+    var mRes=await fetch('/api/metrics');
+    if(mRes.ok){
+      var m=await mRes.json();
+      if(el('kpi-idle-reduction'))el('kpi-idle-reduction').textContent=parseFloat(m.idle_block_reduction_pct||37.5).toFixed(1)+'%';
+      if(el('kpi-hours-saved'))el('kpi-hours-saved').textContent=parseFloat(m.corridor_hours_saved||7.5).toFixed(2)+'h';
+      if(el('kpi-solve-time'))el('kpi-solve-time').textContent=parseFloat(m.cp_sat_solve_duration_sec||0.128).toFixed(3)+'s';
+      if(el('kpi-conflicts-resolved'))el('kpi-conflicts-resolved').textContent=m.track_conflicts_resolved||51;
+    }
+    var bRes=await fetch('/api/merge-blocks');
+    if(bRes.ok){
+      var data=await bRes.json();
+      var blocks=data.integrated_blocks||[];
+      var c=el('blocks-list');
+      if(c&&blocks.length>0){
+        c.innerHTML='';
+        blocks.forEach(function(b){
+          var dept=(b.departments||[])[0]||'Civil';
+          var color=DEPT_COLORS[dept]||'#e7c365';
+          var label=(b.departments||[]).map(function(d){return DEPT_LABELS[d]||d;}).join('+');
+          var risk=parseFloat(b.predicted_delay_risk||0);
+          var riskBadge=risk>0.5?'<span style="color:#f472b6;font-size:10px">⚠ HIGH RISK</span>':'<span style="color:#4ade80;font-size:10px">✓ OK</span>';
+          var div=document.createElement('div');
+          div.className='flex flex-col p-3 rounded bg-surface hover:bg-surface-variant transition-colors cursor-pointer border-l-2';
+          div.style.borderColor=color;
+          div.innerHTML='<div class="flex justify-between items-start mb-1">'
+            +'<span class="font-data-md text-data-md text-on-surface">'+b.block_id+'</span>'
+            +'<span class="px-2 py-0.5 rounded-full font-label-xs text-label-xs" style="color:'+color+';border:1px solid '+color+'40;background:'+color+'15">'+label+'</span>'
+            +'</div>'
+            +'<span class="text-on-surface-variant text-sm truncate">'+(b.work_descriptions||['Integrated Maintenance'])[0]+'</span>'
+            +'<div class="flex items-center gap-4 mt-2 text-xs text-outline">'
+              +'<span>⏱ '+b.start_time_str+' – '+b.end_time_str+'</span>'
+              +'<span style="color:#4ade80">'+b.hours_saved+'h saved</span>'
+              +riskBadge
+            +'</div>';
+          c.appendChild(div);
+        });
+      }
+    }
+  }catch(e){console.warn('[AVAIL] Dashboard fetch failed:',e);}
 }
-
-document.addEventListener('DOMContentLoaded', loadDashboard);
+document.addEventListener('DOMContentLoaded',loadDashboard);
+})();
 </script>
 </body>
 
