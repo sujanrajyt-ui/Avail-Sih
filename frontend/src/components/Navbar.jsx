@@ -1,11 +1,12 @@
 import React from 'react';
-import { Bot, RefreshCw, LayoutDashboard, Cpu, GanttChartSquare, Sliders, FileSpreadsheet, ShieldCheck, BookOpen, Layers } from 'lucide-react';
+import { Bot, RefreshCw, LayoutDashboard, Cpu, Network, GanttChartSquare, Sliders, FileSpreadsheet, ShieldCheck, BookOpen } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize }) {
     const tabs = [
-        { id: 'dashboard', label: 'Executive AI Dashboard', icon: LayoutDashboard },
-        { id: 'pipeline', label: '6-Step AI Pipeline', icon: Cpu },
-        { id: 'gantt', label: 'Corridor Gantt Chart', icon: GanttChartSquare },
+        { id: 'dashboard', label: 'Executive Dashboard', icon: LayoutDashboard },
+        { id: 'pipeline', label: 'Box 2: ML Pipeline', icon: Cpu },
+        { id: 'twin', label: 'Box 3: Digital Twin Graph', icon: Network },
+        { id: 'gantt', label: 'Box 5: Corridor Gantt', icon: GanttChartSquare },
         { id: 'simulation', label: 'What-If Simulator', icon: Sliders },
         { id: 'audit', label: 'CAG Research & Audit', icon: BookOpen },
         { id: 'reports', label: 'Requests & Export', icon: FileSpreadsheet }

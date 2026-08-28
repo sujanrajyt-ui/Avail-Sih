@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import DashboardTab from './components/DashboardTab';
 import AIPipelineTab from './components/AIPipelineTab';
+import DigitalTwinTab from './components/DigitalTwinTab';
 import GanttTab from './components/GanttTab';
 import SimulationTab from './components/SimulationTab';
 import CAGAuditTab from './components/CAGAuditTab';
@@ -100,6 +101,10 @@ export default function App() {
 
                 {activeTab === 'pipeline' && (
                     <AIPipelineTab decisionTrail={decisionTrail} />
+                )}
+
+                {activeTab === 'twin' && (
+                    <DigitalTwinTab />
                 )}
 
                 {activeTab === 'gantt' && (
