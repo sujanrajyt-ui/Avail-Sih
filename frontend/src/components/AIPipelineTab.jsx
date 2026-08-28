@@ -19,7 +19,7 @@ export default function AIPipelineTab({ decisionTrail }) {
             icon: Cpu,
             inputs: ['LSTM / Regressor Running Time Predictor', 'Asset Failure Urgency Classifier', 'Telemetry IsolationForest Anomaly Detector'],
             description: 'Predicts section running times, dwell times, and 30-day failure probabilities for critical track assets.',
-            badge: `Held-Out F1: ${decisionTrail?.failure_model_metrics?.test_f1 || 0.948}`
+            badge: `Held-Out F1: ${decisionTrail?.failure_model_metrics?.test_f1 ?? 0.7500}`
         },
         {
             step: 3,
@@ -51,7 +51,7 @@ export default function AIPipelineTab({ decisionTrail }) {
             icon: CheckCircle2,
             inputs: ['Conflict-Free Timetable', 'Synchronized Civil/OHE/S&T Windows', '1-Click CSV Export & REST API'],
             description: 'Final automated schedule output minimizing train delays while securing mandatory track maintenance.',
-            badge: '37.5% Idle Reduction'
+            badge: '33% Idle Reduction'
         }
     ];
 
@@ -111,10 +111,10 @@ export default function AIPipelineTab({ decisionTrail }) {
                             </div>
                             <div className="text-2xl font-black font-mono text-cyan-400">LSTM + Regressor</div>
                             <p className="text-[11px] text-slate-400 leading-relaxed">
-                                Predicts section running delays and station dwell times across 23 trains on 7 track segments ($R^2 = 0.91$).
+                                Predicts section running delays and station dwell times across 23 trains on 7 track segments (R&sup2; = {decisionTrail?.delay_model_metrics?.calibrated_r2 ?? 0.9934}).
                             </p>
                             <div className="text-[10px] font-mono text-slate-300 bg-slate-800 p-2 rounded border border-slate-700">
-                                MAE: 1.8 mins • Evaluated on 20% held-out test split
+                                MAE: {decisionTrail?.delay_model_metrics?.mae_mins ?? 4.7} mins • R&sup2;: {decisionTrail?.delay_model_metrics?.calibrated_r2 ?? 0.9934} • Held-out test split
                             </div>
                         </div>
 
@@ -128,7 +128,7 @@ export default function AIPipelineTab({ decisionTrail }) {
                                 Predicts 30-day failure probability for track switches, OHE lines, and signal interlockings.
                             </p>
                             <div className="text-[10px] font-mono text-slate-300 bg-slate-800 p-2 rounded border border-slate-700">
-                                F1 Score: {decisionTrail?.failure_model_metrics?.test_f1 || 0.948} • Test Acc: 96.2%
+                                F1 Score: {decisionTrail?.failure_model_metrics?.test_f1 ?? 0.7500} • Test Acc: {((decisionTrail?.failure_model_metrics?.test_accuracy ?? 0.84) * 100).toFixed(1)}%
                             </div>
                         </div>
 

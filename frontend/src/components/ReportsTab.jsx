@@ -11,6 +11,9 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submittedMessage, setSubmittedMessage] = useState(null);
     const [uploadedFileName, setUploadedFileName] = useState(null);
+    const [uploadInfo, setUploadInfo] = useState(null);
+    const [uploadError, setUploadError] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     const handleSubmitRequest = async (e) => {
         e.preventDefault();
@@ -54,13 +57,85 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
         }
     };
 
-    const handleFileUpload = (e) => {
+    const parseCsvRequests = (raw) => {
+        const lines = raw.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (lines.length < 2) throw new Error('CSV must contain a header row and at least one data row');
+        const headers = lines[0].split(',').map((h) => h.trim().replace(/^"|"$/g, ''));
+        const rows = lines.slice(1);
+        return rows.map((line, i) => {
+            const cells = line.split(',').map((c) => c.trim().replace(/^"|"$/g, ''));
+            const row = {};
+            headers.forEach((h, j) => (row[h] = cells[j] ?? ''));
+            const num = (label, dflt) => {
+                const v = parseFloat(row[label]);
+                return Number.isFinite(v) ? v : dflt;
+            };
+            const segmentVal = row.segment || row.Segment || 'NDLS-CNB';
+            const [fromStation, toStation] = segmentVal.split('-');
+            return {
+                request_id: row.request_id || row.Request_ID || `REQ-UPLOAD-${Date.now().toString().slice(-4)}-${i}`,
+                department: row.department || row.Department || 'Civil',
+                department_code: row.department_code || row.Department_Code || 'CIV',
+                segment: segmentVal,
+                from_station: row.from_station || fromStation,
+                to_station: row.to_station || toStation,
+                work_type: row.work_type || row.Work_Type || 'Ingested Maintenance Work',
+                preferred_start_min: num('preferred_start_min', 480),
+                preferred_end_min: num('preferred_end_min', 720),
+                min_duration_min: num('min_duration_min', 60),
+                priority: num('priority', 2),
+                track_affected: row.track_affected || row.Track_Affected || 'DOWN_LINE',
+                required_speed_restriction_kmph: num('required_speed_restriction_kmph', 30)
+            };
+        });
+    };
+
+    const handleFileUpload = async (e) => {
         const file = e.target.files?.[0];
-        if (file) {
+        if (!file) return;
+        setIsUploading(true);
+        setUploadError(null);
+        setUploadInfo(null);
+        try {
+            const raw = await file.text();
+            let requests = [];
+            const trimmed = raw.trim();
+            if (trimmed.startsWith('[')) {
+                const parsed = JSON.parse(trimmed);
+                requests = parsed.map((r) => ({
+                    request_id: r.request_id ?? `REQ-UPLOAD-${Date.now().toString().slice(-4)}`,
+                    department: r.department ?? 'Civil',
+                    department_code: r.department_code ?? 'CIV',
+                    segment: r.segment ?? 'NDLS-CNB',
+                    from_station: r.from_station ?? (r.segment ?? 'NDLS-CNB').split('-')[0],
+                    to_station: r.to_station ?? (r.segment ?? 'NDLS-CNB').split('-')[1],
+                    work_type: r.work_type ?? 'Ingested Maintenance Work',
+                    preferred_start_min: Number(r.preferred_start_min ?? 480),
+                    preferred_end_min: Number(r.preferred_end_min ?? 720),
+                    min_duration_min: Number(r.min_duration_min ?? 60),
+                    priority: Number(r.priority ?? 2),
+                    track_affected: r.track_affected ?? 'DOWN_LINE',
+                    required_speed_restriction_kmph: Number(r.required_speed_restriction_kmph ?? 30)
+                }));
+            } else {
+                requests = parseCsvRequests(raw);
+            }
+
+            const res = await fetch('/api/ingest-requests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requests)
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || 'Ingestion failed');
             setUploadedFileName(file.name);
-            setTimeout(() => {
-                if (onRequestSubmitted) onRequestSubmitted();
-            }, 500);
+            setUploadInfo(`Ingested ${data.ingested} request(s)${data.skipped_duplicates ? ` (${data.skipped_duplicates} duplicate IDs skipped)` : ''} — ${data.total_requests} total.`);
+            if (onRequestSubmitted) onRequestSubmitted();
+        } catch (err) {
+            console.warn('[AVAIL React] Ingestion error:', err);
+            setUploadError(`Ingestion failed: ${err.message}`);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -211,18 +286,30 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
                         </p>
 
                         <label className="border-2 border-dashed border-slate-700 hover:border-cyan-400 bg-slate-950/80 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all">
-                            <input type="file" accept=".csv,.json" onChange={handleFileUpload} className="hidden" />
+                            <input type="file" accept=".csv,.json" onChange={handleFileUpload} className="hidden" disabled={isUploading} />
                             <FileSpreadsheet className="w-10 h-10 text-cyan-400 opacity-80" />
                             <div className="text-center">
-                                <span className="text-xs font-bold text-white block">Click to upload or drag & drop CSV file</span>
-                                <span className="text-[11px] text-slate-500 font-mono">Supports .csv, .json format (Max 10 MB)</span>
+                                <span className="text-xs font-bold text-white block">
+                                    {isUploading ? 'Uploading & parsing...' : 'Click to upload or drag & drop CSV file'}
+                                </span>
+                                <span className="text-[11px] text-slate-500 font-mono">Supports .csv, .json format (Max 10 MB) — JSON array or CSV with headers: request_id, department, segment, preferred_start_min, preferred_end_min...</span>
                             </div>
                         </label>
 
-                        {uploadedFileName && (
+                        {uploadedFileName && !uploadError && (
                             <div className="mt-4 p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-xs font-mono text-cyan-300 flex items-center gap-2">
                                 <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                                <span>Uploaded: {uploadedFileName} (Ingested into Box 1)</span>
+                                <div>
+                                    <div>Uploaded: {uploadedFileName}</div>
+                                    <div className="text-cyan-200/80">{uploadInfo}</div>
+                                </div>
+                            </div>
+                        )}
+
+                        {uploadError && (
+                            <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/40 text-xs font-mono text-red-300 flex items-center gap-2">
+                                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                                <span>{uploadError}</span>
                             </div>
                         )}
                     </div>

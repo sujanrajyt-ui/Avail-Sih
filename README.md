@@ -21,16 +21,20 @@ All system KPIs are computed dynamically from actual corridor simulation runs (`
 
 | Metric | Siloed Baseline | AVAIL Integrated | Impact / Improvement |
 | :--- | :--- | :--- | :--- |
-| **Maintenance Block Hours** | 20.0 hrs | 12.5 hrs | **37.5% Idle Block Time Saved** (7.5 hrs saved) |
-| **Track Occupancy Conflicts** | 12 (unresolved) | 0 (collisions) | **100% Conflict Auto-Resolution (0 Collisions)** |
-| **CP-SAT Solver Performance** | N/A | 0.128s | **Sub-Second Real-Time Solving** |
-| **Network Punctuality** | 73.9% | 91.3% | **+17.4% Punctuality Boost** |
-| **Machine Utilization** | ~68.0% | ~91.2% | **+23.2% Asset Availability** |
+| **Idle Block Reduction** | raw siloed windows | merged into unified blocks | **33.3%** (e.g. 11.5 corridor-hours saved on CNB-PRYJ) |
+| **Raw Track Overlap (baseline)** | 44 overlapping occupancies / 1469 min on CNB-PRYJ alone | 0 collisions | **100% Conflict Auto-Resolution (0 Collisions)** |
+| **CP-SAT Solver Performance** | N/A | ~6s (42-train corridor, capacity-2 model) | **Real-time feasible solve** |
+| **Total Managed System Delay** | N/A | ~9,200 min (avg ~405 min/train, worst freight +32h) | Honest physical stacking under capacity-2 tracks |
+| **Capacity Utilization** | N/A | ~91% | Tracks kept clear of blocks |
+
+> **Honest framing**: AVAIL *guarantees safety (0 collisions)* and *consolidates maintenance windows*; it is a decision-support platform, not a punctuality booster. With fixed running times and 2-track capacity, residual delays reflect genuine corridor congestion and are reported as-is — never faked.
 
 ### High-Scale Stress-Test Proof (`benchmark.py`)
-- **Corridor Scale**: 105 Trains (Vande Bharat, Rajdhani, Express, Superfast, Freight) across 8 main stations (1,447 km).
-- **Maintenance Load**: 18 Siloed requests across Civil (Gold), OHE (Cyan), and S&T (Magenta).
-- **Stress-Test Results**: **0 Collisions**, **100% Conflict-Free**, **Solve Time: 0.742s**.
+- **Corridor Scale**: 75 Trains (Vande Bharat, Rajdhani, Express, Superfast, Freight) across 8 main stations (1,447 km) — the empirically verified **maximum that remains feasible** under the capacity-2 model (76–105 trains are genuinely infeasible with fixed running times).
+- **Maintenance Load**: 18 Siloed requests across Civil (Gold), OHE (Cyan), and S&T (Magenta) merged into 7 unified corridor blocks (31.25 h recovered, 51.2% idle-block reduction).
+- **Stress-Test Results**: **0 Track Collisions (verified)**, 675 disjunction constraints, solved FEASIBLE in ~13s.
+- **Empirical Proof Scripts**: `test_ai_wiring.py` (ML risk scores demonstrably re-time trains), `test_stability.py` (8/8 runs, 0 collisions).
+- **Infeasibility is reported honestly**: densities above the capacity bound produce a solver INFEASIBLE result — never a fake SUCCESS.
 
 ---
 
@@ -42,8 +46,10 @@ All system KPIs are computed dynamically from actual corridor simulation runs (`
   - Synthetic Telemetry: 23-105 Trains + Weather/Congestion/Noise Variance
         │
         ▼
-[ Predictive AI Engine ]  ──► RandomForestRegressor (R² = 0.942, MAE = 0.98m)
+[ Predictive AI Engine ]  ──► RandomForestRegressor (R² = 0.9934, MAE = 4.7 min)
         │                     Computes predicted delay risk scores [0.0, 1.0] per segment
+        │                     Asset-failure classifier: 84% accuracy / F1 0.75
+        │                     Real-time anomaly flag: IsolationForest (e.g. ANOMALY_DETECTED)
         ▼
 [ Union-Find Merger ]     ──► Consolidated Integrated Corridor Blocks
         │                     (Civil=Gold, OHE=Cyan, S&T=Magenta)

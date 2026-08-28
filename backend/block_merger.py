@@ -2,6 +2,16 @@ from typing import List, Dict, Any
 import json
 import os
 
+try:
+    from backend.predictive_model import TravelTimePredictor
+except ImportError:
+    from predictive_model import TravelTimePredictor
+
+try:
+    from backend.data_generator import SEGMENTS
+except ImportError:
+    from data_generator import SEGMENTS
+
 class DisjointSet:
     def __init__(self, n: int):
         self.parent = list(range(n))
@@ -31,6 +41,29 @@ class BlockMerger:
         """
         self.merge_window = merge_window_minutes
         self.buffer_minutes = buffer_minutes
+        self._predictor = None
+
+    def _get_predictor(self) -> TravelTimePredictor:
+        if self._predictor is None:
+            self._predictor = TravelTimePredictor()
+        return self._predictor
+
+    @staticmethod
+    def _real_segment_length(segment: str) -> float:
+        """
+        Returns the true corridor length (km) for a segment key such as 'CNB-PRYJ',
+        falling back to the historical default of 195 km for unknown segments.
+        """
+        if "-" not in segment:
+            return 195.0
+        try:
+            seg_from, seg_to = segment.split("-")
+        except ValueError:
+            return 195.0
+        for seg in SEGMENTS:
+            if seg["from"] == seg_from and seg["to"] == seg_to:
+                return float(seg["length_km"])
+        return 195.0
 
     def merge_requests(self, raw_requests: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
@@ -126,10 +159,12 @@ class BlockMerger:
             hours_saved_in_group = (siloed_group_mins - integrated_duration) / 60.0
 
             # Calculate predicted delay risk score for this block's segment
-            from backend.predictive_model import TravelTimePredictor
-            predictor = TravelTimePredictor()
-            seg_length = 195.0 # default length if unknown
-            risk_score = predictor.get_segment_risk_score(segment_length_km=seg_length, max_speed_kmph=min_speed_restriction or 120, congestion_index=0.6)
+            seg_length = self._real_segment_length(segment)
+            risk_score = self._get_predictor().get_segment_risk_score(
+                segment_length_km=seg_length,
+                max_speed_kmph=min_speed_restriction or 120,
+                congestion_index=0.6
+            )
 
             integrated_blocks.append({
                 "block_id": f"ICB-{block_id_counter:03d}",

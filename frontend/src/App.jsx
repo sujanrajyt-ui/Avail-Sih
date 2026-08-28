@@ -10,7 +10,7 @@ import CAGAuditTab from './components/CAGAuditTab';
 import ReportsTab from './components/ReportsTab';
 import AuthModal from './components/AuthModal';
 import JudgeSandboxModal from './components/JudgeSandboxModal';
-import { ArrowRight, Play, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 
 export default function App() {
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -21,6 +21,9 @@ export default function App() {
     const [isSimulating, setIsSimulating] = useState(false);
     const [simulationResult, setSimulationResult] = useState(null);
 
+    // Theme State (default: 'light')
+    const [theme, setTheme] = useState('light');
+
     // Auth, Demo Mode & Sandbox State
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [isSandboxOpen, setIsSandboxOpen] = useState(false);
@@ -28,9 +31,22 @@ export default function App() {
     const [isDemoMode, setIsDemoMode] = useState(false);
     const [demoStep, setDemoStep] = useState(0);
 
+    const toggleTheme = () => {
+        const nextTheme = theme === 'dark' ? 'light' : 'dark';
+        setTheme(nextTheme);
+    };
+
+    useEffect(() => {
+        if (theme === 'light') {
+            document.body.classList.add('light-theme');
+        } else {
+            document.body.classList.remove('light-theme');
+        }
+    }, [theme]);
+
     const demoTourSteps = [
         { tab: 'dashboard', title: 'Step 1: SIH Key Claims & Executive Dashboard', desc: 'Highlights 16% idle days eliminated, 400% loco failure surge addressed, and Problem Resolution Matrix.' },
-        { tab: 'pipeline', title: 'Step 2: 6-Step Technical Architecture Pipeline', desc: 'Examines ML Delay Risk, Asset Failure Classifier (F1=0.948), and CP-SAT Constraint Solver.' },
+        { tab: 'pipeline', title: 'Step 2: 6-Step Technical Architecture Pipeline', desc: 'Examines ML Delay Risk, Asset Failure Classifier (F1=0.75), and CP-SAT Constraint Solver.' },
         { tab: 'twin', title: 'Step 3: Network Digital Twin (Box 3)', desc: 'Visualizes the 1,447 km NDLS-HWH node-edge topology graph with speed restrictions.' },
         { tab: 'gantt', title: 'Step 4: Realistic Corridor Gantt Canvas (Box 5)', desc: 'Displays 24-hour UP/DN track segment schedules with Civil, OHE, and S&T maintenance windows.' },
         { tab: 'map', title: 'Step 5: GIS Route Map & Live Telemetry', desc: 'Tracks live train densities and permissible speeds along the corridor.' },
@@ -118,7 +134,7 @@ export default function App() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-black relative">
+        <div className={`min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-black relative transition-colors ${theme === 'light' ? 'light-theme bg-slate-50 text-slate-900' : 'bg-[#0B0F19] text-slate-100'}`}>
             {/* Top Navbar */}
             <Navbar
                 activeTab={activeTab}
@@ -128,6 +144,8 @@ export default function App() {
                 onOpenAuth={() => setIsAuthOpen(true)}
                 onStartDemo={startDemoTour}
                 onOpenSandbox={() => setIsSandboxOpen(true)}
+                theme={theme}
+                onToggleTheme={toggleTheme}
             />
 
             {/* Judges Guided Presentation Tour Banner */}
@@ -162,7 +180,7 @@ export default function App() {
             )}
 
             {/* Main View Area */}
-            <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+            <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
                 {activeTab === 'dashboard' && (
                     <DashboardTab
                         metrics={metrics}
@@ -172,20 +190,44 @@ export default function App() {
                     />
                 )}
 
-                {activeTab === 'pipeline' && (
-                    <AIPipelineTab decisionTrail={decisionTrail} />
+                {(activeTab === 'pipeline' || activeTab === 'twin') && (
+                    <div className="space-y-6">
+                        <div className="flex gap-2 bg-slate-900/60 p-1 rounded-xl border border-slate-800 w-fit">
+                            <button
+                                onClick={() => setActiveTab('pipeline')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'pipeline' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                Box 2: ML Models
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('twin')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'twin' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                Box 3: Digital Twin Graph
+                            </button>
+                        </div>
+                        {activeTab === 'pipeline' ? <AIPipelineTab decisionTrail={decisionTrail} /> : <DigitalTwinTab />}
+                    </div>
                 )}
 
-                {activeTab === 'twin' && (
-                    <DigitalTwinTab />
-                )}
-
-                {activeTab === 'gantt' && (
-                    <GanttTab blocks={blocks} />
-                )}
-
-                {activeTab === 'map' && (
-                    <CorridorMap />
+                {(activeTab === 'gantt' || activeTab === 'map') && (
+                    <div className="space-y-6">
+                        <div className="flex gap-2 bg-slate-900/60 p-1 rounded-xl border border-slate-800 w-fit">
+                            <button
+                                onClick={() => setActiveTab('gantt')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'gantt' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                Box 5: Realistic Corridor Gantt
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('map')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'map' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                Box 5: GIS Route Map
+                            </button>
+                        </div>
+                        {activeTab === 'gantt' ? <GanttTab blocks={blocks} /> : <CorridorMap />}
+                    </div>
                 )}
 
                 {activeTab === 'simulation' && (
@@ -196,15 +238,24 @@ export default function App() {
                     />
                 )}
 
-                {activeTab === 'audit' && (
-                    <CAGAuditTab />
-                )}
-
-                {activeTab === 'reports' && (
-                    <ReportsTab
-                        blocks={blocks}
-                        onRequestSubmitted={fetchAllData}
-                    />
+                {(activeTab === 'audit' || activeTab === 'reports') && (
+                    <div className="space-y-6">
+                        <div className="flex gap-2 bg-slate-900/60 p-1 rounded-xl border border-slate-800 w-fit">
+                            <button
+                                onClick={() => setActiveTab('audit')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'audit' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                CAG Audit Proof
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('reports')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'reports' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                CSV Ingestion & Reports
+                            </button>
+                        </div>
+                        {activeTab === 'audit' ? <CAGAuditTab /> : <ReportsTab blocks={blocks} onRequestSubmitted={fetchAllData} />}
+                    </div>
                 )}
             </main>
 
@@ -213,7 +264,7 @@ export default function App() {
                 <div>
                     <span className="font-bold text-slate-300">AVAIL Autonomous AI Platform</span> — SIH 2026 (SIH26027)
                 </div>
-                <div className="font-mono text-[11px] text-cyan-400">
+                <div className="font-mono text-[11px] text-cyan-500">
                     Team Durga Ghee Podi Dosa • NDLS-HWH 1,447 km Digital Twin
                 </div>
             </footer>

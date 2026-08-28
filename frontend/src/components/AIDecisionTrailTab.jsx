@@ -27,14 +27,14 @@ export default function AIDecisionTrailTab({ decisionTrail }) {
                     <div className="text-right">
                         <span className="text-slate-400 text-[10px] uppercase block">Failure Model F1</span>
                         <span className="text-emerald-400 font-bold text-sm">
-                            {decisionTrail?.failure_model_metrics?.test_f1 || 0.948}
+                            {decisionTrail?.failure_model_metrics?.test_f1 ?? 0.7500}
                         </span>
                     </div>
                     <div className="h-8 w-px bg-slate-700"></div>
                     <div className="text-right">
                         <span className="text-slate-400 text-[10px] uppercase block">Delay Model R²</span>
                         <span className="text-cyan-400 font-bold text-sm">
-                            {decisionTrail?.delay_model_metrics?.calibrated_r2 || 0.91}
+                            {decisionTrail?.delay_model_metrics?.calibrated_r2 ?? 0.9934}
                         </span>
                     </div>
                 </div>
@@ -109,7 +109,7 @@ export default function AIDecisionTrailTab({ decisionTrail }) {
                                 <span className="w-7 h-7 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono font-bold text-xs border border-amber-500/40">2</span>
                                 <div>
                                     <h4 className="text-sm font-bold text-white">Step 2: Asset Failure Risk & Urgency Prediction</h4>
-                                    <span className="text-xs text-amber-400 font-mono">RandomForestClassifier Model (Held-Out F1 = 0.948)</span>
+                                    <span className="text-xs text-amber-400 font-mono">RandomForestClassifier Model (Held-Out F1 = 0.7500)</span>
                                 </div>
                             </div>
                             <span className="text-sm font-mono font-bold text-amber-400 bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/30">

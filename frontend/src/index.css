@@ -4,17 +4,18 @@
 
 @layer utilities {
   .glass-card {
-    background: rgba(17, 24, 39, 0.7);
+    background: rgba(17, 24, 39, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(51, 65, 85, 0.5);
   }
-  
+
   .glass-card-hover {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .glass-card-hover:hover {
-    background: rgba(30, 41, 59, 0.8);
+    background: rgba(30, 41, 59, 0.85);
     border-color: rgba(0, 229, 255, 0.4);
     box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
     transform: translateY(-2px);
@@ -33,18 +34,65 @@
   }
 }
 
+/* Light Theme Overrides */
+.light-theme {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+.light-theme .glass-card {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+.light-theme header,
+.light-theme nav {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+.light-theme .text-white {
+  color: #0F172A !important;
+}
+
+.light-theme .text-slate-100,
+.light-theme .text-slate-200,
+.light-theme .text-slate-300 {
+  color: #1E293B !important;
+}
+
+.light-theme .text-slate-400,
+.light-theme .text-slate-500 {
+  color: #475569 !important;
+}
+
+.light-theme .bg-slate-900,
+.light-theme .bg-slate-950 {
+  background-color: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+}
+
+.light-theme .border-slate-800,
+.light-theme .border-slate-700 {
+  border-color: #E2E8F0 !important;
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #0B0F19;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #1E293B;
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #00E5FF;
 }

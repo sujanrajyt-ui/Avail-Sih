@@ -53,7 +53,7 @@ export default function DashboardTab({ metrics, blocks, decisionTrail, onSelectT
                             </span>
                         </div>
                         <p className="text-xs text-slate-400 mt-0.5">
-                            CP-SAT Solve Speed: <strong className="text-cyan-400 font-mono">{parseFloat(metrics?.cp_sat_solve_duration_sec || 0.128).toFixed(3)}s</strong> • Track Conflicts Resolved: <strong className="text-emerald-400 font-mono">{metrics?.track_conflicts_resolved || 51}</strong>
+                            CP-SAT Solve Speed: <strong className="text-cyan-400 font-mono">{parseFloat(metrics?.cp_sat_solve_duration_sec || 0).toFixed(2)}s</strong> • Track Conflicts Resolved: <strong className="text-emerald-400 font-mono">{metrics?.track_conflicts_resolved || 0}</strong>
                         </p>
                     </div>
                 </div>

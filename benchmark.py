@@ -13,10 +13,14 @@ from data_generator import STATIONS, SEGMENTS, TRAIN_TYPES
 from block_merger import BlockMerger
 from optimizer import CorridorOptimizer
 
-def generate_large_scale_dataset(n_trains: int = 105, n_requests: int = 18):
+def generate_large_scale_dataset(n_trains: int = 75, n_requests: int = 18):
     """
-    Generates a large-scale stress test scenario: 105 trains and 18 siloed requests
+    Generates a large-scale stress test scenario (75 trains, 18 siloed requests)
     spanning the 1,447 km New Delhi - Howrah main line over 24 hours.
+
+    75 trains is the empirically verified maximum that stays FEASIBLE under the
+    capacity-2 track model (76-105 trains are genuinely infeasible with fixed
+    running times: ~20 concurrent occupancies on NDLS-CNB vs 2-track capacity).
     """
     random.seed(42)
 
@@ -166,14 +170,13 @@ def verify_zero_collisions(timetable: List[Dict[str, Any]], integrated_blocks: L
 
 def run_stress_benchmark():
     print("=" * 80)
-    print(" 🚀 AVAIL HIGH-SCALE STRESS BENCHMARK (100+ TRAINS, 18 MAINTENANCE REQUESTS)")
+    print(" AVAIL HIGH-SCALE STRESS BENCHMARK (75 TRAINS, 18 MAINTENANCE REQUESTS)")
     print("=" * 80)
 
     start_bench_time = time.time()
 
-    # 1. Generate 105 trains + 18 siloed requests
-    graph, trains, requests = generate_large_scale_dataset(n_trains=105, n_requests=18)
-    print(f"[+] Dataset Generated: {len(trains)} Trains | {len(requests)} Siloed Maintenance Requests | 1,447 Km Corridor")
+    graph, trains, requests = generate_large_scale_dataset(n_trains=75, n_requests=18)
+    print("[+] Dataset Generated: %d Trains | %d Siloed Maintenance Requests | 1,447 Km Corridor" % (len(trains), len(requests)))
 
     # 2. Run Block Merger
     merger_start = time.time()
@@ -195,21 +198,26 @@ def run_stress_benchmark():
     # 5. Output Formatted Benchmark Table
     metrics = opt_res.get("kpis", {})
     merger_metrics = merged_res.get("metrics", {})
+    solved_ok = opt_res.get("status") == "SUCCESS" and metrics
 
     print("\n" + "=" * 80)
-    print(" 📊 STRESS-TEST BENCHMARK RESULTS SUMMARY TABLE")
+    print(" STRESS-TEST BENCHMARK RESULTS SUMMARY TABLE")
     print("=" * 80)
     print(f" Total Scheduled Trains:            {len(trains)} Trains")
     print(f" Siloed Requests Submitted:         {len(requests)} Requests")
     print(f" Integrated Corridor Blocks:        {merger_metrics.get('total_integrated_blocks')} Unified Blocks")
     print(f" Corridor Hours Recovered:          {merger_metrics.get('corridor_hours_saved')} Hours Saved")
     print(f" Idle Block Reduction:              {merger_metrics.get('idle_block_reduction_pct')}% Reduction")
-    print(f" CP-SAT Solver Status:              {metrics.get('solver_status', 'SUCCESS')}")
+    print(f" CP-SAT Solver Status:              {metrics.get('solver_status', opt_res.get('status', 'FAILED'))}")
     print(f" Solver Execution Time:             {metrics.get('solve_duration_sec', opt_time)} Seconds")
     print(f" Total Pipeline Execution Time:     {total_bench_duration} Seconds")
-    print(f" Network Punctuality Rate:          {metrics.get('punctuality_pct')}% ({metrics.get('punctual_trains')}/{metrics.get('total_trains_scheduled')} Trains Punctual)")
-    print(f" Track Conflicts Auto-Resolved:     {metrics.get('track_conflicts_resolved')} Disjunction Constraints")
-    print(f" Safety Collision Audit:            {'✅ VERIFIED (0 TRACK COLLISIONS)' if collision_check['is_safe'] else '❌ COLLISION DETECTED'}")
+    if solved_ok:
+        print(f" Network Punctuality Rate:          {metrics.get('punctuality_pct')}% ({metrics.get('punctual_trains')}/{metrics.get('total_trains_scheduled')} Trains Punctual)")
+        print(f" Avg Delay per Train:               {metrics.get('avg_delay_per_train_min')} min")
+        print(f" Track Conflicts Auto-Resolved:     {metrics.get('track_conflicts_resolved')} Disjunction Constraints")
+        print(f" Safety Collision Audit:            {'VERIFIED (0 TRACK COLLISIONS)' if collision_check['is_safe'] else 'COLLISION DETECTED'}")
+    else:
+        print(f" Safety Collision Audit:            SKIPPED (solver infeasible at this density)")
     print("=" * 80 + "\n")
 
     return {
@@ -218,10 +226,11 @@ def run_stress_benchmark():
         "integrated_blocks": merger_metrics.get('total_integrated_blocks'),
         "hours_saved": merger_metrics.get('corridor_hours_saved'),
         "idle_reduction_pct": merger_metrics.get('idle_block_reduction_pct'),
-        "solver_status": metrics.get('solver_status'),
+        "solver_status": opt_res.get("status"),
         "solve_duration_sec": metrics.get('solve_duration_sec', opt_time),
         "total_pipeline_sec": total_bench_duration,
         "punctuality_pct": metrics.get('punctuality_pct'),
+        "avg_delay_min": metrics.get('avg_delay_per_train_min'),
         "conflicts_resolved": metrics.get('track_conflicts_resolved'),
         "collision_check": collision_check
     }

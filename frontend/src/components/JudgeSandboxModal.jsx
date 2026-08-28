@@ -21,25 +21,35 @@ export default function JudgeSandboxModal({ isOpen, onClose }) {
         setIsSimulating(true);
         setResult(null);
 
-        // Call backend API or simulate live CP-SAT solve
-        setTimeout(() => {
-            setIsSimulating(false);
-            setResult({
-                solve_time_ms: 142,
-                collisions_baseline: 2,
-                collisions_avail: 0,
-                delay_baseline_mins: 165,
-                delay_avail_mins: 18,
-                hours_saved: 2.45,
-                reasoning_steps: [
-                    `1. ML Anomaly Detector (IsolationForest) flagged ${scenarioType === 'ANOMALY_SPIKE' ? '58°C Rail Expansion' : 'Urgent Telemetry Signal'} on segment ${segment}.`,
-                    `2. Asset Failure Model computed 87.4% failure urgency score (Composite Priority Boost +0.25).`,
-                    `3. CP-SAT Solver recalculated 105 decision intervals in 142ms.`,
-                    `4. Civil and OHE maintenance windows merged into single 2.5h block at 14:00 on DOWN Line.`,
-                    `5. Train 22436 rerouted to UP Line with 0 track conflicts.`
-                ]
+        // Run a REAL isolation-forest + failure-risk + CP-SAT solve on the backend
+        try {
+            const res = await fetch('/api/sandbox-simulate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    scenario_type: scenarioType,
+                    segment: segment,
+                    train_delay_mins: parseInt(trainDelayMins || 0),
+                    block_window_hours: parseFloat(maintenanceDurationHours || 2.5)
+                })
             });
-        }, 450);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || 'Sandbox solve failed');
+            setResult(data);
+        } catch (err) {
+            console.warn('[AVAIL React] Sandbox solve error:', err);
+            setResult({
+                solve_time_ms: 0,
+                collisions_baseline: 0,
+                collisions_avail: 0,
+                delay_baseline_mins: 0,
+                delay_avail_mins: 0,
+                hours_saved: 0,
+                reasoning_steps: [`Sandbox solve failed: ${err.message}`]
+            });
+        } finally {
+            setIsSimulating(false);
+        }
     };
 
     return (
