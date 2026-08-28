@@ -23,7 +23,13 @@ def main():
 
     # 3. Start Streamlit Dashboard
     print("\n[3/3] Launching Streamlit Interactive What-If Dashboard (http://127.0.0.1:8501)...")
-    frontend_proc = subprocess.Popen([sys.executable, "-m", "streamlit", "run", os.path.join(base_dir, "frontend", "app.py"), "--server.port", "8501"])
+    frontend_proc = subprocess.Popen([
+        sys.executable, "-m", "streamlit", "run",
+        os.path.join(base_dir, "frontend", "app.py"),
+        "--server.port", "8501",
+        "--server.address", "127.0.0.1",
+        "--server.headless", "true"
+    ])
 
     print("\n" + "=" * 70)
     print(" SUCCESS! AVAIL System is running.")
