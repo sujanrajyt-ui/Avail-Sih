@@ -1,0 +1,104 @@
+{
+  "corridor": "New Delhi - Howrah Main Line",
+  "total_distance_km": 1447,
+  "stations": [
+    {
+      "code": "NDLS",
+      "name": "New Delhi",
+      "km": 0
+    },
+    {
+      "code": "CNB",
+      "name": "Kanpur Central",
+      "km": 440
+    },
+    {
+      "code": "PRYJ",
+      "name": "Prayagraj Junction",
+      "km": 635
+    },
+    {
+      "code": "DDU",
+      "name": "Pt. Deen Dayal Upadhyaya",
+      "km": 788
+    },
+    {
+      "code": "GAYA",
+      "name": "Gaya Junction",
+      "km": 993
+    },
+    {
+      "code": "DHN",
+      "name": "Dhanbad Junction",
+      "km": 1194
+    },
+    {
+      "code": "ASN",
+      "name": "Asansol Junction",
+      "km": 1253
+    },
+    {
+      "code": "HWH",
+      "name": "Howrah Junction",
+      "km": 1447
+    }
+  ],
+  "segments": [
+    {
+      "from": "NDLS",
+      "to": "CNB",
+      "length_km": 440,
+      "max_speed_kmph": 130,
+      "tracks": 2,
+      "signal_blocks": 88
+    },
+    {
+      "from": "CNB",
+      "to": "PRYJ",
+      "length_km": 195,
+      "max_speed_kmph": 130,
+      "tracks": 2,
+      "signal_blocks": 39
+    },
+    {
+      "from": "PRYJ",
+      "to": "DDU",
+      "length_km": 153,
+      "max_speed_kmph": 130,
+      "tracks": 2,
+      "signal_blocks": 30
+    },
+    {
+      "from": "DDU",
+      "to": "GAYA",
+      "length_km": 205,
+      "max_speed_kmph": 120,
+      "tracks": 2,
+      "signal_blocks": 41
+    },
+    {
+      "from": "GAYA",
+      "to": "DHN",
+      "length_km": 201,
+      "max_speed_kmph": 110,
+      "tracks": 2,
+      "signal_blocks": 40
+    },
+    {
+      "from": "DHN",
+      "to": "ASN",
+      "length_km": 59,
+      "max_speed_kmph": 120,
+      "tracks": 2,
+      "signal_blocks": 12
+    },
+    {
+      "from": "ASN",
+      "to": "HWH",
+      "length_km": 194,
+      "max_speed_kmph": 130,
+      "tracks": 2,
+      "signal_blocks": 38
+    }
+  ]
+}
