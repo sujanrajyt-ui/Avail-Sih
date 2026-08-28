@@ -9,6 +9,7 @@ import SimulationTab from './components/SimulationTab';
 import CAGAuditTab from './components/CAGAuditTab';
 import ReportsTab from './components/ReportsTab';
 import AuthModal from './components/AuthModal';
+import JudgeSandboxModal from './components/JudgeSandboxModal';
 import { ArrowRight, Play, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
@@ -20,8 +21,9 @@ export default function App() {
     const [isSimulating, setIsSimulating] = useState(false);
     const [simulationResult, setSimulationResult] = useState(null);
 
-    // Auth & Demo Mode State
+    // Auth, Demo Mode & Sandbox State
     const [isAuthOpen, setIsAuthOpen] = useState(false);
+    const [isSandboxOpen, setIsSandboxOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [isDemoMode, setIsDemoMode] = useState(false);
     const [demoStep, setDemoStep] = useState(0);
@@ -125,6 +127,7 @@ export default function App() {
                 onReoptimize={handleReoptimize}
                 onOpenAuth={() => setIsAuthOpen(true)}
                 onStartDemo={startDemoTour}
+                onOpenSandbox={() => setIsSandboxOpen(true)}
             />
 
             {/* Judges Guided Presentation Tour Banner */}
@@ -215,11 +218,16 @@ export default function App() {
                 </div>
             </footer>
 
-            {/* Authentication Modal */}
+            {/* Modals */}
             <AuthModal
                 isOpen={isAuthOpen}
                 onClose={() => setIsAuthOpen(false)}
                 onLoginSuccess={() => setIsAuthenticated(true)}
+            />
+
+            <JudgeSandboxModal
+                isOpen={isSandboxOpen}
+                onClose={() => setIsSandboxOpen(false)}
             />
         </div>
     );

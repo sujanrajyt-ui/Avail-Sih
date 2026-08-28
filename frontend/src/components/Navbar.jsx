@@ -1,7 +1,7 @@
 import React from 'react';
-import { Bot, RefreshCw, LayoutDashboard, Cpu, Network, GanttChartSquare, Sliders, FileSpreadsheet, ShieldCheck, BookOpen, Navigation, Lock, Play } from 'lucide-react';
+import { Bot, RefreshCw, LayoutDashboard, Cpu, Network, GanttChartSquare, Sliders, FileSpreadsheet, ShieldCheck, BookOpen, Navigation, Lock, Play, Gamepad2 } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize, onOpenAuth, onStartDemo }) {
+export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize, onOpenAuth, onStartDemo, onOpenSandbox }) {
     const tabs = [
         { id: 'dashboard', label: 'Executive Dashboard', icon: LayoutDashboard },
         { id: 'pipeline', label: 'Box 2: ML Pipeline', icon: Cpu },
@@ -56,6 +56,15 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
 
             {/* Action Buttons (Fitts's Law) */}
             <div className="flex items-center gap-2">
+                <button
+                    onClick={onOpenSandbox}
+                    className="flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl transition-all shadow-lg shadow-purple-500/25"
+                    title="Open Interactive Judge Sandbox Simulator"
+                >
+                    <Gamepad2 className="w-4 h-4" />
+                    <span>🎮 Judge Sandbox</span>
+                </button>
+
                 <button
                     onClick={onStartDemo}
                     className="flex items-center gap-1.5 bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/40 text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-lg shadow-purple-500/15"
