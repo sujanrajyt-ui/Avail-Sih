@@ -12,26 +12,37 @@ export default function DigitalTwinTab() {
             .catch((err) => console.warn('[AVAIL React] Network fetch error:', err));
     }, []);
 
-    const stations = [
-        { code: 'NDLS', name: 'New Delhi', km: 0, platforms: 16, status: 'NOMINAL', congestion: 'High' },
-        { code: 'CNB', name: 'Kanpur Central', km: 440, platforms: 10, status: 'NOMINAL', congestion: 'High' },
-        { code: 'PRYJ', name: 'Prayagraj Jn', km: 635, platforms: 10, status: 'TSR_ACTIVE', congestion: 'Medium' },
-        { code: 'DDU', name: 'Pt. DD Upadhyaya', km: 788, platforms: 8, status: 'NOMINAL', congestion: 'High' },
-        { code: 'GAYA', name: 'Gaya Junction', km: 992, platforms: 9, status: 'NOMINAL', congestion: 'Low' },
-        { code: 'DHN', name: 'Dhanbad Junction', km: 1178, platforms: 7, status: 'MAINT_BLOCK', congestion: 'Medium' },
-        { code: 'ASN', name: 'Asansol Junction', km: 1238, platforms: 7, status: 'NOMINAL', congestion: 'Medium' },
-        { code: 'HWH', name: 'Howrah Junction', km: 1447, platforms: 23, status: 'NOMINAL', congestion: 'Critical' }
-    ];
+    // Fallback metadata (platforms/status/congestion are not part of the network graph API)
+    const stationMeta = {
+        NDLS: { platforms: 16, status: 'NOMINAL', congestion: 'High' },
+        CNB: { platforms: 10, status: 'NOMINAL', congestion: 'High' },
+        PRYJ: { platforms: 10, status: 'NOMINAL', congestion: 'Medium' },
+        DDU: { platforms: 8, status: 'NOMINAL', congestion: 'High' },
+        GAYA: { platforms: 9, status: 'NOMINAL', congestion: 'Low' },
+        DHN: { platforms: 7, status: 'NOMINAL', congestion: 'Medium' },
+        ASN: { platforms: 7, status: 'NOMINAL', congestion: 'Medium' },
+        HWH: { platforms: 23, status: 'NOMINAL', congestion: 'Critical' }
+    };
 
-    const segments = [
-        { from: 'NDLS', to: 'CNB', dist: 440, tracks: 2, maxSpeed: 130, tsr: 0, status: 'CLEAR' },
-        { from: 'CNB', to: 'PRYJ', dist: 195, tracks: 2, maxSpeed: 130, tsr: 60, status: 'TSR_60KMPH' },
-        { from: 'PRYJ', to: 'DDU', dist: 153, tracks: 2, maxSpeed: 130, tsr: 0, status: 'CLEAR' },
-        { from: 'DDU', to: 'GAYA', dist: 204, tracks: 2, maxSpeed: 110, tsr: 0, status: 'CLEAR' },
-        { from: 'GAYA', to: 'DHN', dist: 186, tracks: 2, maxSpeed: 110, tsr: 45, status: 'TSR_45KMPH' },
-        { from: 'DHN', to: 'ASN', dist: 60, tracks: 2, maxSpeed: 110, tsr: 0, status: 'CLEAR' },
-        { from: 'ASN', to: 'HWH', dist: 209, tracks: 2, maxSpeed: 130, tsr: 0, status: 'CLEAR' }
-    ];
+    const stations = (networkData?.stations || []).map((st) => {
+        const meta = stationMeta[st.code] || stationMeta['CNB'];
+        return {
+            code: st.code,
+            name: st.name,
+            km: st.km,
+            platforms: meta.platforms,
+            status: st.code === 'PRYJ' && (networkData?.segments || []).find((s) => s.from === 'PRYJ' || s.to === 'PRYJ')?.max_speed_kmph ? meta.status : meta.status,
+            congestion: meta.congestion
+        };
+    });
+
+    const segments = (networkData?.segments || []).map((seg) => ({
+        from: seg.from,
+        to: seg.to,
+        dist: seg.length_km,
+        tracks: seg.tracks,
+        maxSpeed: seg.max_speed_kmph
+    }));
 
     const activeStn = stations.find((s) => s.code === selectedStation) || stations[1];
 
@@ -156,15 +167,10 @@ export default function DigitalTwinTab() {
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <span className="text-slate-300">Max: <strong className="text-white">{seg.maxSpeed} km/h</strong></span>
-                                    {seg.tsr > 0 ? (
-                                        <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-bold">
-                                            TSR {seg.tsr} km/h
-                                        </span>
-                                    ) : (
-                                        <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded font-bold">
-                                            Clear Speed
-                                        </span>
-                                    )}
+                                    <span className="text-slate-400">{seg.tracks} tracks</span>
+                                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded font-bold">
+                                        Clear Speed
+                                    </span>
                                 </div>
                             </div>
                         ))}
