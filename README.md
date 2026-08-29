@@ -92,3 +92,27 @@ python benchmark.py
 - **Human-in-the-Loop Safeguard**: AVAIL works as a decision-support platform for Railway Controllers. Autonomous execution is restricted; every optimized schedule requires explicit controller sign-off.
 - **Fail-Safe Fallback**: If CP-SAT fails to solve within 5.0 seconds under catastrophic disruption, the system falls back to default safety buffers.
 - **Zero Collision Guarantee**: Hard disjunction constraints ($S_j \ge E_i$ or $S_i \ge E_j$) strictly prevent track occupancy overlap.
+
+---
+
+## 6. Railway Terms & Glossary of Keywords
+
+| Keyword / Acronym | Full Name / Category | Operational Meaning |
+| :--- | :--- | :--- |
+| **AVAIL** | Autonomous Block Planning Engine | AI platform that automatically merges siloed departmental requests into conflict-free maintenance windows. |
+| **CP-SAT** | Constraint Programming - Satisfiability | Google OR-Tools solver that formulates timetable scheduling as a mathematical constraint satisfaction problem for 0 collisions. |
+| **OHE** | Overhead Equipment (Electrical) | High-voltage (25kV AC) traction wires, catenaries, isolators, and power supply lines along electrified railway tracks. |
+| **S&T** | Signalling & Telecommunication | Department managing electronic interlocking systems, track circuits, point machines, signals, and axle counters. |
+| **Civil (P-Way)** | Permanent Way (Civil Engineering) | Department managing physical rails, sleepers, ballast beds, turnouts, switches, bridges, and track alignment. |
+| **Shadow Block** | Multi-Department Integrated Window | Single track closure time slot where Civil, OHE, and S&T work simultaneously on the same segment to avoid redundant shutdowns. |
+| **UP Line** | Upward Track Direction | Track segment where train traffic travels towards New Delhi (Westbound). |
+| **DOWN Line** | Downward Track Direction | Track segment where train traffic travels towards Howrah/Kolkata (Eastbound). |
+| **Digital Twin** | Virtual Graph Network Topology | Graph-based model representing 1,447 km NDLS-HWH corridor with station nodes, track edges, speed restrictions, and live train density. |
+| **Isolation Forest** | Unsupervised Anomaly Detection ML | ML algorithm detecting abnormal telemetry spikes (e.g., rail expansion >58°C, voltage drop, or track alignment vibration). |
+| **Random Forest** | Supervised Failure Risk Model | Classifier with F1 score = 0.75 predicting asset failure probability based on age, tonnage, ambient temperature, and maintenance history. |
+| **TSR / PSR** | Speed Restrictions | Temporary Speed Restriction (e.g. 45 km/h during track work) / Permanent Speed Restriction. |
+| **Tamping** | Track Ballast Tamping Work | Mechanical compaction of crushed stone ballast under sleepers to restore geometric track alignment and smooth train rides. |
+| **CAG Audit 22** | CAG Compliance Report No. 22 (2021) | Official Indian Govt audit citing 12,466 timetable conflicts, 400% surge in loco failures, and 700% OHE failure spikes caused by siloed planning. |
+| **NDLS-HWH** | New Delhi to Howrah Main Route | 1,447 km Golden Quadrilateral railway trunk line connecting New Delhi, Kanpur, Prayagraj, DDU, Gaya, Dhanbad, Asansol, and Howrah. |
+| **SIH26027** | Smart India Hackathon Problem Statement | Problem Statement ID: AI-Powered Automatic Block Planning to Maximize Asset Availability for Train Operations on Indian Railways. |
+

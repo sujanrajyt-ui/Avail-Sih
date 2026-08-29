@@ -11,6 +11,7 @@ import ReportsTab from './components/ReportsTab';
 import AuthModal from './components/AuthModal';
 import JudgeSandboxModal from './components/JudgeSandboxModal';
 import MaintenanceModal from './components/MaintenanceModal';
+import GlossaryModal from './components/GlossaryModal';
 import { ArrowRight, Play } from 'lucide-react';
 
 export default function App() {
@@ -25,10 +26,11 @@ export default function App() {
     // Theme State (default: 'light')
     const [theme, setTheme] = useState('light');
 
-    // Auth, Demo Mode, Sandbox & Maintenance Modal State
+    // Auth, Demo Mode, Sandbox, Maintenance & Glossary Modal State
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [isSandboxOpen, setIsSandboxOpen] = useState(false);
     const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
+    const [isGlossaryOpen, setIsGlossaryOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [isDemoMode, setIsDemoMode] = useState(false);
     const [demoStep, setDemoStep] = useState(0);
@@ -47,13 +49,13 @@ export default function App() {
     }, [theme]);
 
     const demoTourSteps = [
-        { tab: 'dashboard', title: 'Step 1: SIH Key Claims & Executive Dashboard', desc: 'Highlights 16% idle days eliminated, 400% loco failure surge addressed, and Problem Resolution Matrix.' },
-        { tab: 'pipeline', title: 'Step 2: 6-Step Technical Architecture Pipeline', desc: 'Examines ML Delay Risk, Asset Failure Classifier (F1=0.75), and CP-SAT Constraint Solver.' },
-        { tab: 'twin', title: 'Step 3: Network Digital Twin (Box 3)', desc: 'Visualizes the 1,447 km NDLS-HWH node-edge topology graph with speed restrictions.' },
-        { tab: 'gantt', title: 'Step 4: Realistic Corridor Gantt Canvas (Box 5)', desc: 'Displays 24-hour UP/DN track segment schedules with Civil, OHE, and S&T maintenance windows.' },
+        { tab: 'dashboard', title: 'Step 1: Executive Dashboard & SIH Key Claims', desc: 'Highlights 33.3% idle time reduction, 0 track collisions, and Indian Railways resolution matrix.' },
+        { tab: 'pipeline', title: 'Step 2: 6-Step Technical AI Pipeline', desc: 'Examines ML Delay Risk, Random Forest classifier (F1=0.75), and CP-SAT Constraint Solver.' },
+        { tab: 'twin', title: 'Step 3: Network Digital Twin Graph', desc: 'Visualizes the 1,447 km NDLS-HWH node-edge topology graph with speed restrictions.' },
+        { tab: 'gantt', title: 'Step 4: 24-Hour Corridor Gantt Canvas', desc: 'Displays UP & DOWN track segment schedules with Civil, OHE, and S&T maintenance windows.' },
         { tab: 'map', title: 'Step 5: GIS Route Map & Live Telemetry', desc: 'Tracks live train densities and permissible speeds along the corridor.' },
         { tab: 'simulation', title: 'Step 6: What-If Scenario Simulator', desc: 'Allows traffic controllers to test disruption scenarios and re-optimize schedules in <0.35s.' },
-        { tab: 'audit', title: 'Step 7: CAG Audit Proof & Research Citations', desc: 'Cites CAG Compliance Report No. 22 of 2021 and 12,466 timetable conflict audit baseline.' }
+        { tab: 'audit', title: 'Step 7: CAG Audit Compliance Proof', desc: 'Cites CAG Compliance Report No. 22 of 2021 and 12,466 timetable conflict audit baseline.' }
     ];
 
     const fetchAllData = async () => {
@@ -137,6 +139,25 @@ export default function App() {
 
     return (
         <div className={`min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-black relative transition-colors ${theme === 'light' ? 'light-theme bg-slate-50 text-slate-900' : 'bg-[#0B0F19] text-slate-100'}`}>
+            {/* Official Indian Railways Government Header Bar */}
+            <div className="bg-slate-950 text-slate-200 border-b border-slate-800 text-[11px] px-4 sm:px-8 py-1.5 flex flex-wrap items-center justify-between gap-2 z-50">
+                <div className="flex items-center gap-2 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                    <span className="font-extrabold tracking-wide text-white">भारतीय रेल | INDIAN RAILWAYS</span>
+                    <span className="hidden sm:inline text-slate-400">• Ministry of Railways, Govt. of India</span>
+                </div>
+                <div className="flex items-center gap-3 font-mono text-[10px]">
+                    <span className="bg-sky-950 text-sky-300 border border-sky-800 px-2 py-0.5 rounded font-bold">
+                        NDLS-HWH 1,447 km Corridor Operational
+                    </span>
+                    <span className="hidden md:inline text-amber-400 font-bold">
+                        SIH26027 Priority AI System
+                    </span>
+                </div>
+            </div>
+            {/* Tricolor Accent Line */}
+            <div className="h-0.5 bg-gradient-to-r from-orange-500 via-white to-emerald-500 w-full z-50"></div>
+
             {/* Top Navbar */}
             <Navbar
                 activeTab={activeTab}
@@ -147,33 +168,39 @@ export default function App() {
                 onStartDemo={startDemoTour}
                 onOpenSandbox={() => setIsSandboxOpen(true)}
                 onOpenMaintenance={() => setIsMaintenanceOpen(true)}
+                onOpenGlossary={() => setIsGlossaryOpen(true)}
                 theme={theme}
                 onToggleTheme={toggleTheme}
             />
 
-            {/* Judges Guided Presentation Tour Banner */}
+            {/* High-Visibility Judges Guided Presentation Tour Banner */}
             {isDemoMode && (
-                <div className="bg-gradient-to-r from-purple-900/90 via-indigo-900/90 to-slate-900/90 border-b border-purple-500/40 p-4 px-6 flex flex-wrap items-center justify-between gap-4 sticky top-[61px] z-40 backdrop-blur-md">
+                <div className="bg-slate-900 text-white border-b-2 border-sky-400 p-4 px-6 flex flex-wrap items-center justify-between gap-4 sticky top-[61px] z-40 shadow-xl backdrop-blur-md">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center justify-center font-bold font-mono text-xs">
+                        <div className="w-9 h-9 rounded-xl bg-sky-500 text-slate-950 flex items-center justify-center font-extrabold font-mono text-sm shadow-md">
                             {demoStep + 1}/{demoTourSteps.length}
                         </div>
                         <div>
-                            <h3 className="text-sm font-extrabold text-white">{demoTourSteps[demoStep].title}</h3>
-                            <p className="text-xs text-purple-200">{demoTourSteps[demoStep].desc}</p>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-mono bg-sky-950 text-sky-300 border border-sky-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                                    Official Guided Tour
+                                </span>
+                                <h3 className="text-sm font-extrabold text-white">{demoTourSteps[demoStep].title}</h3>
+                            </div>
+                            <p className="text-xs text-sky-100 font-medium mt-0.5">{demoTourSteps[demoStep].desc}</p>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setIsDemoMode(false)}
-                            className="text-xs font-semibold text-slate-400 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700"
+                            className="text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl border border-slate-700 transition-all"
                         >
                             Exit Tour
                         </button>
                         <button
                             onClick={nextDemoStep}
-                            className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-extrabold text-xs px-4 py-2 rounded-xl shadow-lg shadow-purple-500/25 hover:from-purple-400 hover:to-indigo-500 transition-all"
+                            className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs px-4 py-2 rounded-xl shadow-lg shadow-sky-500/30 transition-all active:scale-95"
                         >
                             <span>{demoStep === demoTourSteps.length - 1 ? 'Finish Tour' : 'Next Step'}</span>
                             <ArrowRight className="w-4 h-4" />
@@ -290,7 +317,13 @@ export default function App() {
                 onClose={() => setIsMaintenanceOpen(false)}
                 onRequestSubmitted={fetchAllData}
             />
+
+            <GlossaryModal
+                isOpen={isGlossaryOpen}
+                onClose={() => setIsGlossaryOpen(false)}
+            />
         </div>
     );
 }
+
 

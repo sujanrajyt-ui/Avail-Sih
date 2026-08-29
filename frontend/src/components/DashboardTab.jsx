@@ -10,10 +10,10 @@ export default function DashboardTab({ metrics, blocks, decisionTrail, onSelectT
 
     // Page 2 SIH Deck Claims
     const sihClaims = [
-        { label: 'Idle Days Eliminated', value: '16%', sub: 'Machine Clustering', color: 'text-sky-700 border-sky-200 bg-white' },
-        { label: 'Loco Failures Prevented', value: '400%', sub: 'Preemptive Scheduling', color: 'text-amber-700 border-amber-200 bg-white' },
-        { label: 'OHE Failures Addressed', value: '700%', sub: 'Integrated Windows', color: 'text-purple-700 border-purple-200 bg-white' },
-        { label: 'Journey Time Savings', value: '~5.5 Hours', sub: '110/130 kmph Express Trains', color: 'text-emerald-700 border-emerald-200 bg-white' }
+        { label: 'Idle Machine Time Saved', value: '33.3%', sub: '31.25 Corridor Hours Recovered', color: 'text-sky-700 border-sky-200 bg-white' },
+        { label: 'Track Collisions Guaranteed', value: '0 Conflicts', sub: 'CP-SAT Solver Hard Constraints', color: 'text-emerald-700 border-emerald-200 bg-white' },
+        { label: 'OHE & Loco Failures Prevented', value: '400%', sub: 'CAG Audit Benchmark Addressed', color: 'text-purple-700 border-purple-200 bg-white' },
+        { label: 'Corridor Capacity Restored', value: '11.5 Hours', sub: 'NDLS-HWH 1,447 km Digital Twin', color: 'text-indigo-700 border-indigo-200 bg-white' }
     ];
 
     const transformations = [
@@ -141,10 +141,13 @@ export default function DashboardTab({ metrics, blocks, decisionTrail, onSelectT
 
                         <div className="space-y-2.5">
                             {transformations.map((t, idx) => (
-                                <div key={idx} className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
-                                    <div className="text-[11px] text-rose-600 line-through">Legacy: {t.before}</div>
-                                    <div className="text-xs font-bold text-emerald-700 flex items-center gap-1.5">
-                                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                <div key={idx} className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                                    <div className="flex items-center gap-2 text-[11px] text-slate-600 font-medium">
+                                        <span className="font-mono bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded text-[10px] font-bold">BEFORE</span>
+                                        <span>{t.before}</span>
+                                    </div>
+                                    <div className="text-xs font-bold text-emerald-800 flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                                         <span>AVAIL: {t.after}</span>
                                     </div>
                                 </div>
