@@ -51,42 +51,43 @@ def main():
     print("    Team Durga Ghee Podi Dosa | New Delhi - Howrah Main Line Corridor")
     print("=" * 70)
 
-    kill_existing_port_process(8000)
-    time.sleep(0.5)
+    port = int(os.environ.get("PORT", 8000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    is_render = "RENDER" in os.environ or "PORT" in os.environ
+
+    if not is_render:
+        kill_existing_port_process(port)
+        time.sleep(0.5)
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # 1. Build React frontend bundle
+    # 1. Build React frontend bundle if dist doesn't exist
     build_react_frontend(base_dir)
 
     # 2. Run seed data generation & calibration
     print("\n[2/3] Initializing Corridor Graph & Calibration Datasets...")
     subprocess.run([sys.executable, os.path.join(base_dir, "backend", "data_generator.py")], check=True)
 
-    # 3. Open browser after short delay
-    def open_browser():
-        time.sleep(2.5)
-        print("\n[+] Opening AVAIL AI Dashboard in web browser...")
-        webbrowser.open("http://127.0.0.1:8000/")
+    # 3. Open browser locally if interactive session
+    if not is_render:
+        def open_browser():
+            time.sleep(2.5)
+            print(f"\n[+] Opening AVAIL AI Dashboard in web browser (http://127.0.0.1:{port}/)...")
+            webbrowser.open(f"http://127.0.0.1:{port}/")
 
-    import threading
-    threading.Thread(target=open_browser, daemon=True).start()
+        import threading
+        threading.Thread(target=open_browser, daemon=True).start()
 
-    print("\n[3/3] Starting AVAIL AI Engine on http://127.0.0.1:8000 ...")
+    print(f"\n[3/3] Starting AVAIL AI Engine on http://{host}:{port} ...")
     print("=" * 70)
-    print("  • AI Dashboard (React): http://127.0.0.1:8000/")
-    print("  • Corridor Gantt View: http://127.0.0.1:8000/gantt")
-    print("  • What-If Simulation:  http://127.0.0.1:8000/simulation")
-    print("  • Block Reports:       http://127.0.0.1:8000/reports")
-    print("  • AI Decision Trail:   http://127.0.0.1:8000/api/ai-decision-trail")
-    print("  • API Interactive Docs:http://127.0.0.1:8000/docs")
+    print(f"  • AI Dashboard (React): http://{host}:{port}/")
+    print(f"  • API Interactive Docs: http://{host}:{port}/docs")
     print("=" * 70)
-    print("\nPress Ctrl+C to stop the system.\n")
 
-    # Launch uvicorn directly in foreground
+    # Launch uvicorn
     import uvicorn
     from backend.main import app
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host=host, port=port)
 
 if __name__ == "__main__":
     main()
