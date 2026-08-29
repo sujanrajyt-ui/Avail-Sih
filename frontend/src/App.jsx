@@ -252,18 +252,24 @@ export default function App() {
 
                 {(activeTab === 'pipeline' || activeTab === 'twin') && (
                     <div className="space-y-6">
-                        <div className="flex gap-2 bg-slate-900/60 p-1 rounded-xl border border-slate-800 w-fit">
+                        <div className="flex gap-2 bg-slate-100 border border-slate-200 p-1 rounded-xl w-fit">
                             <button
                                 onClick={() => setActiveTab('pipeline')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'pipeline' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'pipeline'
+                                        ? 'bg-sky-600 text-white shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                                    }`}
                             >
-                                Box 2: ML Models
+                                📊 ML Models & AI Pipeline
                             </button>
                             <button
                                 onClick={() => setActiveTab('twin')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'twin' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'twin'
+                                        ? 'bg-sky-600 text-white shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                                    }`}
                             >
-                                Box 3: Digital Twin Graph
+                                🌐 Network Digital Twin
                             </button>
                         </div>
                         {activeTab === 'pipeline' ? <AIPipelineTab decisionTrail={decisionTrail} /> : <DigitalTwinTab />}
@@ -272,18 +278,24 @@ export default function App() {
 
                 {(activeTab === 'gantt' || activeTab === 'map') && (
                     <div className="space-y-6">
-                        <div className="flex gap-2 bg-slate-900/60 p-1 rounded-xl border border-slate-800 w-fit">
+                        <div className="flex gap-2 bg-slate-100 border border-slate-200 p-1 rounded-xl w-fit">
                             <button
                                 onClick={() => setActiveTab('gantt')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'gantt' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'gantt'
+                                        ? 'bg-sky-600 text-white shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                                    }`}
                             >
-                                Box 5: Realistic Corridor Gantt
+                                📅 24h Corridor Gantt
                             </button>
                             <button
                                 onClick={() => setActiveTab('map')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'map' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'map'
+                                        ? 'bg-sky-600 text-white shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                                    }`}
                             >
-                                Box 5: GIS Route Map
+                                🗺️ GIS Route Map
                             </button>
                         </div>
                         {activeTab === 'gantt' ? <GanttTab blocks={blocks} /> : <CorridorMap />}
