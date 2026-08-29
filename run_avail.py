@@ -39,15 +39,15 @@ def build_react_frontend(base_dir):
             cmd = "npm.cmd run build" if os.name == 'nt' else "npm run build"
             res = subprocess.run(cmd, cwd=frontend_dir, shell=True, capture_output=True, text=True)
             if res.returncode == 0:
-                print("    ✅ React Build Complete (`frontend/dist` compiled).")
+                print("    [SUCCESS] React Build Complete (frontend/dist compiled).")
             else:
-                print(f"    ⚠️ Build warning: {res.stderr[:200]}")
+                print(f"    [WARNING] Build warning: {res.stderr[:200]}")
         except Exception as e:
-            print(f"    ⚠️ React build skipped ({e}). Using existing bundle.")
+            print(f"    [WARNING] React build skipped ({e}). Using existing bundle.")
 
 def main():
     print("=" * 70)
-    print(" 🚆 AVAIL Autonomous AI System Launcher — SIH26027")
+    print(" AVAIL Autonomous AI System Launcher - SIH26027")
     print("    Team Durga Ghee Podi Dosa | New Delhi - Howrah Main Line Corridor")
     print("=" * 70)
 
@@ -80,8 +80,8 @@ def main():
 
     print(f"\n[3/3] Starting AVAIL AI Engine on http://{host}:{port} ...")
     print("=" * 70)
-    print(f"  • AI Dashboard (React): http://{host}:{port}/")
-    print(f"  • API Interactive Docs: http://{host}:{port}/docs")
+    print(f"  * AI Dashboard (React): http://{host}:{port}/")
+    print(f"  * API Interactive Docs: http://{host}:{port}/docs")
     print("=" * 70)
 
     # Launch uvicorn

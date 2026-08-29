@@ -12,7 +12,7 @@ import AuthModal from './components/AuthModal';
 import JudgeSandboxModal from './components/JudgeSandboxModal';
 import MaintenanceModal from './components/MaintenanceModal';
 
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, Play, ArrowLeft } from 'lucide-react';
 
 export default function App() {
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -252,12 +252,12 @@ export default function App() {
 
                 {(activeTab === 'pipeline' || activeTab === 'twin') && (
                     <div className="space-y-6">
-                        <div className="flex gap-2 bg-slate-100 border border-slate-200 p-1 rounded-xl w-fit">
+                        <div className={`flex gap-2 p-1 rounded-xl w-fit border ${theme === 'light' ? 'bg-slate-100 border-slate-200' : 'bg-slate-900 border-slate-800'}`}>
                             <button
                                 onClick={() => setActiveTab('pipeline')}
                                 className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'pipeline'
                                         ? 'bg-sky-600 text-white shadow-sm'
-                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                                        : theme === 'light' ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-slate-400 hover:text-white hover:bg-slate-800'
                                     }`}
                             >
                                 📊 ML Models & AI Pipeline
@@ -266,7 +266,7 @@ export default function App() {
                                 onClick={() => setActiveTab('twin')}
                                 className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'twin'
                                         ? 'bg-sky-600 text-white shadow-sm'
-                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                                        : theme === 'light' ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-slate-400 hover:text-white hover:bg-slate-800'
                                     }`}
                             >
                                 🌐 Network Digital Twin
@@ -278,12 +278,12 @@ export default function App() {
 
                 {(activeTab === 'gantt' || activeTab === 'map') && (
                     <div className="space-y-6">
-                        <div className="flex gap-2 bg-slate-100 border border-slate-200 p-1 rounded-xl w-fit">
+                        <div className={`flex gap-2 p-1 rounded-xl w-fit border ${theme === 'light' ? 'bg-slate-100 border-slate-200' : 'bg-slate-900 border-slate-800'}`}>
                             <button
                                 onClick={() => setActiveTab('gantt')}
                                 className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'gantt'
                                         ? 'bg-sky-600 text-white shadow-sm'
-                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                                        : theme === 'light' ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-slate-400 hover:text-white hover:bg-slate-800'
                                     }`}
                             >
                                 📅 24h Corridor Gantt
@@ -292,7 +292,7 @@ export default function App() {
                                 onClick={() => setActiveTab('map')}
                                 className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'map'
                                         ? 'bg-sky-600 text-white shadow-sm'
-                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                                        : theme === 'light' ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-slate-400 hover:text-white hover:bg-slate-800'
                                     }`}
                             >
                                 🗺️ GIS Route Map
@@ -312,16 +312,20 @@ export default function App() {
 
                 {(activeTab === 'audit' || activeTab === 'reports') && (
                     <div className="space-y-6">
-                        <div className="flex gap-2 bg-slate-900/60 p-1 rounded-xl border border-slate-800 w-fit">
+                        <div className={`flex gap-2 p-1 rounded-xl border w-fit ${theme === 'light' ? 'bg-slate-100 border-slate-200' : 'bg-slate-900/60 border-slate-800'}`}>
                             <button
                                 onClick={() => setActiveTab('audit')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'audit' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'audit'
+                                    ? theme === 'light' ? 'bg-sky-600 text-white font-extrabold shadow-sm' : 'bg-cyan-500 text-slate-950 font-extrabold'
+                                    : theme === 'light' ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-slate-400 hover:text-white'}`}
                             >
                                 CAG Audit Proof
                             </button>
                             <button
                                 onClick={() => setActiveTab('reports')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'reports' ? 'bg-cyan-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'}`}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'reports'
+                                    ? theme === 'light' ? 'bg-sky-600 text-white font-extrabold shadow-sm' : 'bg-cyan-500 text-slate-950 font-extrabold'
+                                    : theme === 'light' ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-slate-400 hover:text-white'}`}
                             >
                                 CSV Ingestion & Reports
                             </button>

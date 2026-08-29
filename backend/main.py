@@ -40,6 +40,7 @@ app.add_middleware(
 NETWORK_GRAPH = {}
 TIMETABLE = []
 RAW_REQUESTS = []
+ORIGINAL_TIMETABLE = []
 
 merger_engine = BlockMerger(merge_window_minutes=120)
 optimizer_engine = CorridorOptimizer(time_limit_seconds=6.0)
@@ -52,7 +53,7 @@ failure_engine.train()
 anomaly_engine.train()
 
 def load_or_generate_data():
-    global NETWORK_GRAPH, TIMETABLE, RAW_REQUESTS
+    global NETWORK_GRAPH, TIMETABLE, RAW_REQUESTS, ORIGINAL_TIMETABLE
     
     graph_path = os.path.join(DATA_DIR, "network_graph.json")
     tt_path = os.path.join(DATA_DIR, "timetable.json")
@@ -78,6 +79,9 @@ def load_or_generate_data():
     if not RAW_REQUESTS:
         from data_generator import generate_siloed_maintenance_requests
         RAW_REQUESTS = generate_siloed_maintenance_requests()
+
+    if TIMETABLE:
+        ORIGINAL_TIMETABLE = json.loads(json.dumps(TIMETABLE))
 
 # Load data on import
 load_or_generate_data()
@@ -260,10 +264,24 @@ def sandbox_simulate(scenario: SandboxScenarioModel):
       - hours_saved:        corridor-hours saved by merging siloed department requests.
       - reasoning_steps:    the actual ML/solver pipeline outputs, not canned text.
     """
+    global RAW_REQUESTS, TIMETABLE
     t0 = datetime.datetime.now()
     from_st, to_st = scenario.segment.split("-")
     seg_key = f"{from_st}-{to_st}"
     rev_key = f"{to_st}-{from_st}"
+
+    # Reset timetable and remove any existing sandbox requests to prevent stacking
+    if ORIGINAL_TIMETABLE:
+        TIMETABLE = json.loads(json.dumps(ORIGINAL_TIMETABLE))
+    RAW_REQUESTS = [r for r in RAW_REQUESTS if not r["request_id"].startswith("REQ-SANDBOX-")]
+
+    # If Vande Bharat delay scenario, apply delay to Train 22436 in the global TIMETABLE
+    if scenario.scenario_type == "VANDE_BHARAT_DELAY":
+        for train in TIMETABLE:
+            if train["train_id"] == "22436":
+                for stop in train["stops"]:
+                    stop["arr_min"] += scenario.train_delay_mins
+                    stop["dep_min"] += scenario.train_delay_mins
 
     # --- Baseline collisions from the RAW timetable on this segment ---
     occ = []
@@ -283,7 +301,7 @@ def sandbox_simulate(scenario: SandboxScenarioModel):
                 collisions_baseline += 1
                 collision_minutes += ov // 2
 
-    # --- Inject the sandbox disruption as an extra maintenance block ---
+    # --- Inject and persist the sandbox disruption as an extra maintenance block ---
     block_start = 720  # 12:00 baseline window for the injected scenario
     block_end = min(1440, block_start + int(scenario.block_window_hours * 60))
     sim_request = {
@@ -301,8 +319,8 @@ def sandbox_simulate(scenario: SandboxScenarioModel):
         "track_affected": "BOTH",
         "required_speed_restriction_kmph": 0
     }
-    sim_reqs = RAW_REQUESTS + [sim_request]
-    merged = merger_engine.merge_requests(sim_reqs)
+    RAW_REQUESTS.append(sim_request)
+    merged = merger_engine.merge_requests(RAW_REQUESTS)
     opt = optimizer_engine.solve(NETWORK_GRAPH, TIMETABLE, merged["integrated_blocks"])
     kpis = opt.get("kpis", {})
     solver_status = kpis.get("solver_status", "FAILED")
@@ -319,10 +337,12 @@ def sandbox_simulate(scenario: SandboxScenarioModel):
         "temp_fluctuation_c": 12.0 + 22.0 * delay_risk,
         "switch_operations_count": 3200
     })
+    
+    ohe_voltage = 17.5 if scenario.scenario_type == "OHE_LINE_BREAKDOWN" else (25.0 - failure_risk * 5.0)
     anomaly = anomaly_engine.detect_anomaly({
         "vibration_rms": 1.2 + delay_risk * 3.0,
         "track_temp_c": 58.0 if scenario.scenario_type == "ANOMALY_SPIKE" else 28.0,
-        "ohe_voltage_kv": 25.0 - failure_risk * 5.0,
+        "ohe_voltage_kv": ohe_voltage,
         "signal_lag_ms": 45.0 + delay_risk * 100.0
     })
 

@@ -91,6 +91,14 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
                 </button>
 
                 <button
+                    onClick={onStartDemo}
+                    className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition-all"
+                >
+                    <Play className="w-3.5 h-3.5 text-sky-600 fill-sky-600" />
+                    <span>Guided Tour</span>
+                </button>
+
+                <button
                     onClick={onOpenSandbox}
                     className="flex items-center gap-1.5 bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 text-xs font-bold px-3 py-2 rounded-xl transition-all"
                 >
