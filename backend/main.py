@@ -61,12 +61,23 @@ def load_or_generate_data():
     if not (os.path.exists(graph_path) and os.path.exists(tt_path) and os.path.exists(req_path)):
         build_data_files()
 
-    with open(graph_path, "r") as f:
-        NETWORK_GRAPH = json.load(f)
-    with open(tt_path, "r") as f:
-        TIMETABLE = json.load(f)
-    with open(req_path, "r") as f:
-        RAW_REQUESTS = json.load(f)
+    try:
+        with open(graph_path, "r") as f:
+            NETWORK_GRAPH = json.load(f)
+        with open(tt_path, "r") as f:
+            TIMETABLE = json.load(f)
+        with open(req_path, "r") as f:
+            RAW_REQUESTS = json.load(f)
+    except Exception as e:
+        print(f"[!] Error reading dataset files ({e}), rebuilding...")
+        build_data_files()
+        with open(graph_path, "r") as f: NETWORK_GRAPH = json.load(f)
+        with open(tt_path, "r") as f: TIMETABLE = json.load(f)
+        with open(req_path, "r") as f: RAW_REQUESTS = json.load(f)
+
+    if not RAW_REQUESTS:
+        from data_generator import generate_siloed_maintenance_requests
+        RAW_REQUESTS = generate_siloed_maintenance_requests()
 
 # Load data on import
 load_or_generate_data()
