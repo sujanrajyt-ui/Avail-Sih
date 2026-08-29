@@ -10,6 +10,7 @@ import CAGAuditTab from './components/CAGAuditTab';
 import ReportsTab from './components/ReportsTab';
 import AuthModal from './components/AuthModal';
 import JudgeSandboxModal from './components/JudgeSandboxModal';
+import MaintenanceModal from './components/MaintenanceModal';
 import { ArrowRight, Play } from 'lucide-react';
 
 export default function App() {
@@ -24,9 +25,10 @@ export default function App() {
     // Theme State (default: 'light')
     const [theme, setTheme] = useState('light');
 
-    // Auth, Demo Mode & Sandbox State
+    // Auth, Demo Mode, Sandbox & Maintenance Modal State
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [isSandboxOpen, setIsSandboxOpen] = useState(false);
+    const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [isDemoMode, setIsDemoMode] = useState(false);
     const [demoStep, setDemoStep] = useState(0);
@@ -144,6 +146,7 @@ export default function App() {
                 onOpenAuth={() => setIsAuthOpen(true)}
                 onStartDemo={startDemoTour}
                 onOpenSandbox={() => setIsSandboxOpen(true)}
+                onOpenMaintenance={() => setIsMaintenanceOpen(true)}
                 theme={theme}
                 onToggleTheme={toggleTheme}
             />
@@ -187,6 +190,7 @@ export default function App() {
                         blocks={blocks}
                         decisionTrail={decisionTrail}
                         onSelectTab={setActiveTab}
+                        onOpenMaintenance={() => setIsMaintenanceOpen(true)}
                     />
                 )}
 
@@ -280,6 +284,13 @@ export default function App() {
                 isOpen={isSandboxOpen}
                 onClose={() => setIsSandboxOpen(false)}
             />
+
+            <MaintenanceModal
+                isOpen={isMaintenanceOpen}
+                onClose={() => setIsMaintenanceOpen(false)}
+                onRequestSubmitted={fetchAllData}
+            />
         </div>
     );
 }
+

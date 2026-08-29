@@ -1,7 +1,7 @@
 import React from 'react';
-import { Bot, RefreshCw, LayoutDashboard, Cpu, GanttChartSquare, BookOpen, Gamepad2, Play, Sun, Moon } from 'lucide-react';
+import { Bot, RefreshCw, LayoutDashboard, Cpu, GanttChartSquare, BookOpen, Gamepad2, Play, Sun, Moon, Wrench } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize, onStartDemo, onOpenSandbox, theme, onToggleTheme }) {
+export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize, onStartDemo, onOpenSandbox, onOpenMaintenance, theme, onToggleTheme }) {
     const tabs = [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { id: 'pipeline', label: 'AI Pipeline & Twin', icon: Cpu },
@@ -50,6 +50,14 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
 
             {/* Primary Action Buttons & Theme Toggle */}
             <div className="flex items-center gap-2">
+                <button
+                    onClick={onOpenMaintenance}
+                    className="flex items-center gap-1.5 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-xs font-bold px-3 py-2 rounded-xl transition-all"
+                >
+                    <Wrench className="w-4 h-4 text-sky-600" />
+                    <span>➕ Request Maintenance</span>
+                </button>
+
                 {/* Sun/Moon Theme Toggle */}
                 <button
                     onClick={onToggleTheme}
@@ -71,7 +79,7 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
 
                 <button
                     onClick={onOpenSandbox}
-                    className="flex items-center gap-1.5 bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 text-xs font-bold px-3.5 py-2 rounded-xl transition-all"
+                    className="flex items-center gap-1.5 bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 text-xs font-bold px-3 py-2 rounded-xl transition-all"
                 >
                     <Gamepad2 className="w-4 h-4 text-purple-600" />
                     <span>Judge Sandbox</span>
@@ -97,4 +105,5 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
         </header>
     );
 }
+
 

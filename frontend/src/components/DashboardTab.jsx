@@ -1,7 +1,7 @@
 import React from 'react';
 import { TrendingUp, Clock, Zap, CheckCircle2, AlertTriangle, ArrowRight, Cpu, Layers, ShieldCheck, Activity, ArrowRightLeft } from 'lucide-react';
 
-export default function DashboardTab({ metrics, blocks, decisionTrail, onSelectTab }) {
+export default function DashboardTab({ metrics, blocks, decisionTrail, onSelectTab, onOpenMaintenance }) {
     const deptColors = {
         'Civil': { border: 'border-amber-400', bg: 'bg-amber-50', text: 'text-amber-800', badge: 'bg-amber-100 text-amber-800 border border-amber-200' },
         'OHE (Electrical)': { border: 'border-sky-400', bg: 'bg-sky-50', text: 'text-sky-800', badge: 'bg-sky-100 text-sky-800 border border-sky-200' },
@@ -13,7 +13,7 @@ export default function DashboardTab({ metrics, blocks, decisionTrail, onSelectT
         { label: 'Idle Days Eliminated', value: '16%', sub: 'Machine Clustering', color: 'text-sky-700 border-sky-200 bg-white' },
         { label: 'Loco Failures Prevented', value: '400%', sub: 'Preemptive Scheduling', color: 'text-amber-700 border-amber-200 bg-white' },
         { label: 'OHE Failures Addressed', value: '700%', sub: 'Integrated Windows', color: 'text-purple-700 border-purple-200 bg-white' },
-        { label: 'Journey Time Savings', value: '~5.5h', sub: '110/130 kmph Trains', color: 'text-emerald-700 border-emerald-200 bg-white' }
+        { label: 'Journey Time Savings', value: '~5.5 Hours', sub: '110/130 kmph Express Trains', color: 'text-emerald-700 border-emerald-200 bg-white' }
     ];
 
     const transformations = [
@@ -27,13 +27,13 @@ export default function DashboardTab({ metrics, blocks, decisionTrail, onSelectT
     return (
         <div className="space-y-6">
             {/* SIH Pitch Deck Key Claims Strip */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {sihClaims.map((claim, idx) => (
-                    <div key={idx} className={`glass-card rounded-2xl p-5 border ${claim.color} shadow-sm flex flex-col justify-between h-32`}>
+                    <div key={idx} className={`glass-card rounded-2xl p-5 border ${claim.color} shadow-sm flex flex-col justify-between min-h-[120px]`}>
                         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">{claim.label}</span>
-                        <div>
-                            <div className={`text-3xl font-black font-mono ${claim.color.split(' ')[0]}`}>{claim.value}</div>
-                            <div className="text-[11px] text-slate-600 font-medium">{claim.sub}</div>
+                        <div className="mt-2">
+                            <div className={`text-2xl sm:text-3xl font-black font-mono tracking-tight ${claim.color.split(' ')[0]}`}>{claim.value}</div>
+                            <div className="text-[11px] text-slate-600 font-medium mt-1 leading-snug">{claim.sub}</div>
                         </div>
                     </div>
                 ))}
@@ -42,30 +42,40 @@ export default function DashboardTab({ metrics, blocks, decisionTrail, onSelectT
             {/* Main AI Status Header */}
             <div className="glass-card rounded-2xl p-6 border border-sky-200 bg-gradient-to-r from-sky-50 via-white to-indigo-50 shadow-sm flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-sky-600 border border-sky-500 flex items-center justify-center text-white shadow-md shadow-sky-200">
+                    <div className="w-12 h-12 rounded-2xl bg-sky-600 border border-sky-500 flex items-center justify-center text-white shadow-md shadow-sky-200 shrink-0">
                         <Cpu className="w-6 h-6 animate-pulse" />
                     </div>
                     <div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                             <h2 className="text-base font-extrabold text-slate-900">AVAIL Autonomous AI Engine Online</h2>
                             <span className="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold">
                                 0 Track Collisions Guaranteed
                             </span>
                         </div>
-                        <p className="text-xs text-slate-600 mt-0.5">
+                        <p className="text-xs text-slate-600 mt-1">
                             CP-SAT Solve Speed: <strong className="text-sky-700 font-mono">{parseFloat(metrics?.cp_sat_solve_duration_sec || 0).toFixed(2)}s</strong> • Track Conflicts Resolved: <strong className="text-emerald-700 font-mono">{metrics?.track_conflicts_resolved || 0}</strong>
                         </p>
                     </div>
                 </div>
 
-                <button
-                    onClick={() => onSelectTab('pipeline')}
-                    className="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all"
-                >
-                    <span>Explore 6-Step Pipeline</span>
-                    <ArrowRight className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={onOpenMaintenance}
+                        className="flex items-center gap-2 bg-white hover:bg-slate-50 text-sky-700 border border-sky-300 font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all"
+                    >
+                        <span>➕ Request AI Maintenance</span>
+                    </button>
+
+                    <button
+                        onClick={() => onSelectTab('pipeline')}
+                        className="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all"
+                    >
+                        <span>Explore 6-Step Pipeline</span>
+                        <ArrowRight className="w-4 h-4" />
+                    </button>
+                </div>
             </div>
+
 
             {/* Grid: Blocks List & Problem Resolution Matrix */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
