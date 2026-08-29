@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Gamepad2, Zap, AlertTriangle, CheckCircle2, ArrowRight, Bot, Cpu, Sparkles, RefreshCw, X } from 'lucide-react';
 
-export default function JudgeSandboxModal({ isOpen, onClose }) {
+export default function JudgeSandboxModal({ isOpen, onClose, onSimulateComplete }) {
     const [scenarioType, setScenarioType] = useState('ANOMALY_SPIKE');
     const [trainDelayMins, setTrainDelayMins] = useState(35);
     const [maintenanceDurationHours, setMaintenanceDurationHours] = useState(2.5);
@@ -36,6 +36,7 @@ export default function JudgeSandboxModal({ isOpen, onClose }) {
             const data = await res.json();
             if (!res.ok) throw new Error(data.detail || 'Sandbox solve failed');
             setResult(data);
+            if (onSimulateComplete) onSimulateComplete();
         } catch (err) {
             console.warn('[AVAIL React] Sandbox solve error:', err);
             setResult({
@@ -86,8 +87,8 @@ export default function JudgeSandboxModal({ isOpen, onClose }) {
                                     key={sc.id}
                                     onClick={() => setScenarioType(sc.id)}
                                     className={`p-3 rounded-xl border text-left transition-all ${scenarioType === sc.id
-                                            ? 'bg-purple-500/20 border-purple-400 text-white font-bold shadow-lg shadow-purple-500/15'
-                                            : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                                        ? 'bg-purple-500/20 border-purple-400 text-white font-bold shadow-lg shadow-purple-500/15'
+                                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
                                         }`}
                                 >
                                     <div className="font-bold text-purple-300 mb-1">{sc.label.split('. ')[1]}</div>

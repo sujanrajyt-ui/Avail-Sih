@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Bot, RefreshCw, LayoutDashboard, Cpu, GanttChartSquare, BookOpen, Gamepad2, Play, Sun, Moon, Wrench, Menu, X } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize, onStartDemo, onOpenSandbox, onOpenMaintenance, onOpenGlossary, theme, onToggleTheme }) {
+export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReoptimize, onStartDemo, onOpenSandbox, onOpenMaintenance, theme, onToggleTheme }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const tabs = [
@@ -30,18 +30,18 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
                     </div>
                 </div>
 
-                {/* Mobile Menu Toggle Button */}
+                {/* Mobile Menu Hamburger Button */}
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="lg:hidden p-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all border border-slate-200"
-                    aria-label="Toggle Navigation Menu"
+                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 lg:hidden border border-slate-200"
+                    aria-label="Toggle navigation menu"
                 >
                     {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                 </button>
             </div>
 
-            {/* Desktop Navigation Tabs */}
-            <nav className="hidden lg:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+            {/* Desktop Center Nav Tabs */}
+            <nav className="hidden lg:flex items-center gap-1 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
                 {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id || (activeTab === 'twin' && tab.id === 'pipeline') || (activeTab === 'map' && tab.id === 'gantt') || (activeTab === 'reports' && tab.id === 'audit');
@@ -49,7 +49,7 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${isActive
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${isActive
                                 ? 'bg-sky-600 text-white font-extrabold shadow-sm'
                                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                                 }`}
@@ -61,17 +61,8 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
                 })}
             </nav>
 
-            {/* Desktop Action Buttons */}
+            {/* Desktop Right Actions */}
             <div className="hidden lg:flex items-center gap-2">
-                <button
-                    onClick={onOpenGlossary}
-                    className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-xs font-bold px-3 py-2 rounded-xl transition-all"
-                    title="View Railway Terms & Meanings"
-                >
-                    <BookOpen className="w-4 h-4 text-sky-600" />
-                    <span>📖 Glossary</span>
-                </button>
-
                 <button
                     onClick={onOpenMaintenance}
                     className="flex items-center gap-1.5 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-xs font-bold px-3 py-2 rounded-xl transition-all"
@@ -151,18 +142,7 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
                         })}
                     </nav>
 
-                    <div className="grid grid-cols-3 gap-2">
-                        <button
-                            onClick={() => {
-                                onOpenGlossary();
-                                setIsMobileMenuOpen(false);
-                            }}
-                            className="flex items-center justify-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-[11px] font-bold p-2.5 rounded-xl"
-                        >
-                            <BookOpen className="w-4 h-4 text-sky-600" />
-                            <span>📖 Glossary</span>
-                        </button>
-
+                    <div className="grid grid-cols-2 gap-2">
                         <button
                             onClick={() => {
                                 onOpenMaintenance();

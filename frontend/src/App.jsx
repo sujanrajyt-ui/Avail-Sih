@@ -11,7 +11,7 @@ import ReportsTab from './components/ReportsTab';
 import AuthModal from './components/AuthModal';
 import JudgeSandboxModal from './components/JudgeSandboxModal';
 import MaintenanceModal from './components/MaintenanceModal';
-import GlossaryModal from './components/GlossaryModal';
+
 import { ArrowRight, Play } from 'lucide-react';
 
 export default function App() {
@@ -26,11 +26,10 @@ export default function App() {
     // Theme State (default: 'light')
     const [theme, setTheme] = useState('light');
 
-    // Auth, Demo Mode, Sandbox, Maintenance & Glossary Modal State
+    // Auth, Demo Mode, Sandbox & Maintenance Modal State
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [isSandboxOpen, setIsSandboxOpen] = useState(false);
     const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
-    const [isGlossaryOpen, setIsGlossaryOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [isDemoMode, setIsDemoMode] = useState(false);
     const [demoStep, setDemoStep] = useState(0);
@@ -164,11 +163,9 @@ export default function App() {
                 setActiveTab={setActiveTab}
                 isOptimizing={isOptimizing}
                 onReoptimize={handleReoptimize}
-                onOpenAuth={() => setIsAuthOpen(true)}
                 onStartDemo={startDemoTour}
                 onOpenSandbox={() => setIsSandboxOpen(true)}
                 onOpenMaintenance={() => setIsMaintenanceOpen(true)}
-                onOpenGlossary={() => setIsGlossaryOpen(true)}
                 theme={theme}
                 onToggleTheme={toggleTheme}
             />
@@ -342,17 +339,13 @@ export default function App() {
             <JudgeSandboxModal
                 isOpen={isSandboxOpen}
                 onClose={() => setIsSandboxOpen(false)}
+                onSimulateComplete={fetchAllData}
             />
 
             <MaintenanceModal
                 isOpen={isMaintenanceOpen}
                 onClose={() => setIsMaintenanceOpen(false)}
                 onRequestSubmitted={fetchAllData}
-            />
-
-            <GlossaryModal
-                isOpen={isGlossaryOpen}
-                onClose={() => setIsGlossaryOpen(false)}
             />
         </div>
     );
