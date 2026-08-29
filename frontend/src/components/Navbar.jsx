@@ -99,14 +99,6 @@ export default function Navbar({ activeTab, setActiveTab, isOptimizing, onReopti
                 </button>
 
                 <button
-                    onClick={onStartDemo}
-                    className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-xs font-semibold px-3 py-2 rounded-xl transition-all"
-                >
-                    <Play className="w-3.5 h-3.5 text-sky-600 fill-sky-600" />
-                    <span>Guided Tour</span>
-                </button>
-
-                <button
                     onClick={onReoptimize}
                     disabled={isOptimizing}
                     className="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs px-4 py-2 rounded-xl transition-all shadow-sm active:scale-95 disabled:opacity-50"
