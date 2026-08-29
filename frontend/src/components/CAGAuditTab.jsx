@@ -44,47 +44,47 @@ export default function CAGAuditTab() {
     return (
         <div className="space-y-6">
             {/* Header Banner */}
-            <div className="glass-card rounded-2xl p-6 border border-amber-500/30 bg-gradient-to-r from-slate-900 via-slate-900 to-amber-950/40 space-y-2">
+            <div className="glass-card rounded-2xl p-6 border border-amber-200 bg-white shadow-sm space-y-2">
                 <div className="flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-amber-400" />
-                    <h2 className="text-lg font-extrabold text-white">CAG Research, Audits & References</h2>
+                    <BookOpen className="w-5 h-5 text-amber-600" />
+                    <h2 className="text-lg font-bold text-slate-900">CAG Research, Audits & References</h2>
                 </div>
-                <p className="text-xs text-slate-400 max-w-3xl leading-relaxed">
+                <p className="text-xs text-slate-600 max-w-3xl leading-relaxed">
                     AVAIL is directly validated against official Comptroller and Auditor General (CAG) of India compliance reports and peer-reviewed operations research literature.
                 </p>
             </div>
 
             {/* 12,466 Conflicts Hotspot Evidence */}
-            <div className="glass-card rounded-2xl p-6 border border-slate-800 bg-slate-900/90 space-y-4">
+            <div className="glass-card rounded-2xl p-6 border border-sky-200 bg-white shadow-sm space-y-4">
                 <div className="flex items-center gap-3">
-                    <Award className="w-6 h-6 text-cyan-400" />
+                    <Award className="w-6 h-6 text-sky-600" />
                     <div>
-                        <h3 className="text-sm font-bold text-white uppercase tracking-wider">Validated Hotspot: New Delhi – Howrah Corridor</h3>
-                        <span className="text-xs text-cyan-400 font-mono">CAG 2021 Audit Baseline</span>
+                        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Validated Hotspot: New Delhi – Howrah Corridor</h3>
+                        <span className="text-xs text-sky-700 font-mono font-semibold">CAG 2021 Audit Baseline</span>
                     </div>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                    The CAG's 2021 audit identified <strong className="text-cyan-400">12,466 timetable conflicts</strong> on the New Delhi – Howrah route via RailSys simulation. AVAIL directly targets this route to eliminate conflicts using CP-SAT constraint optimization.
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                    The CAG's 2021 audit identified <strong className="text-sky-700 font-extrabold">12,466 timetable conflicts</strong> on the New Delhi – Howrah route via RailSys simulation. AVAIL directly targets this route to eliminate conflicts using CP-SAT constraint optimization.
                 </p>
             </div>
 
             {/* References Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {references.map((ref, idx) => (
-                    <div key={idx} className="glass-card glass-card-hover rounded-2xl p-5 border border-slate-800 flex flex-col justify-between space-y-3">
+                    <div key={idx} className="glass-card glass-card-hover rounded-2xl p-5 border border-slate-200 bg-white shadow-sm flex flex-col justify-between space-y-3">
                         <div className="space-y-1">
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
                                 {ref.label}
                             </span>
-                            <h4 className="text-sm font-extrabold text-white pt-1">{ref.stat}</h4>
-                            <p className="text-xs text-slate-400 font-medium">{ref.source}</p>
+                            <h4 className="text-sm font-extrabold text-slate-900 pt-1">{ref.stat}</h4>
+                            <p className="text-xs text-slate-600 font-medium">{ref.source}</p>
                         </div>
 
                         <a
                             href={ref.link}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors pt-2"
+                            className="inline-flex items-center gap-2 text-xs font-semibold text-sky-700 hover:text-sky-800 transition-colors pt-2"
                         >
                             <span>View Verified Document</span>
                             <ExternalLink className="w-3.5 h-3.5" />
@@ -95,3 +95,4 @@ export default function CAGAuditTab() {
         </div>
     );
 }
+

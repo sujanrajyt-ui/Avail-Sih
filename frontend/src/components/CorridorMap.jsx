@@ -19,28 +19,28 @@ export default function CorridorMap() {
     return (
         <div className="space-y-6">
             {/* Map Header */}
-            <div className="glass-card rounded-2xl p-6 border border-cyan-500/30 bg-gradient-to-r from-slate-900 via-slate-900 to-teal-950/40 flex flex-wrap items-center justify-between gap-4">
+            <div className="glass-card rounded-2xl p-6 border border-sky-200 bg-white shadow-sm flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div className="flex items-center gap-2">
-                        <Navigation className="w-5 h-5 text-cyan-400" />
-                        <h2 className="text-lg font-extrabold text-white">Box 5: Geographic Corridor Route Map & Live Telemetry</h2>
+                        <Navigation className="w-5 h-5 text-sky-600" />
+                        <h2 className="text-lg font-bold text-slate-900">Box 5: Geographic Corridor Route Map & Live Telemetry</h2>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+                    <p className="text-xs text-slate-600 mt-1 max-w-2xl">
                         Interactive GIS-style visual route tracking train densities, speed restrictions, and live maintenance block segments along the 1,447 km NDLS-HWH trunk line.
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 font-mono text-xs text-slate-300">
-                    <Train className="w-4 h-4 text-cyan-400" />
-                    <span>Active Trains: <strong className="text-cyan-400">23 En Route</strong></span>
+                <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200 font-mono text-xs text-slate-700">
+                    <Train className="w-4 h-4 text-sky-600" />
+                    <span>Active Trains: <strong className="text-sky-700 font-extrabold">23 En Route</strong></span>
                 </div>
             </div>
 
             {/* Visual Geographic Map Segment Line */}
-            <div className="glass-card rounded-2xl p-6 border border-slate-800 bg-slate-900/90 space-y-6">
+            <div className="glass-card rounded-2xl p-6 border border-slate-200 bg-white shadow-sm space-y-6">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">NDLS ➔ HWH Trunk Route GIS Segments</h3>
-                    <span className="text-xs font-mono text-slate-400">Click segment to inspect telemetry</span>
+                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">NDLS ➔ HWH Trunk Route GIS Segments</h3>
+                    <span className="text-xs font-mono text-slate-500">Click segment to inspect telemetry</span>
                 </div>
 
                 {/* Map Route Segment Buttons */}
@@ -52,18 +52,18 @@ export default function CorridorMap() {
                                 key={seg.id}
                                 onClick={() => setActiveSegment(seg.id)}
                                 className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between h-24 ${isSelected
-                                        ? 'bg-cyan-500/20 border-cyan-400 text-white shadow-lg shadow-cyan-500/20 scale-105 z-10'
-                                        : seg.tsr > 0
-                                            ? 'bg-amber-500/10 border-amber-500/40 text-slate-300 hover:border-amber-400'
-                                            : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                                    ? 'bg-sky-50 border-sky-500 text-slate-900 shadow-sm scale-105 z-10 font-bold'
+                                    : seg.tsr > 0
+                                        ? 'bg-amber-50 border-amber-200 text-slate-700 hover:border-amber-400'
+                                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
                                     }`}
                             >
                                 <div className="flex items-center justify-between">
-                                    <span className="font-mono text-[11px] font-bold text-cyan-400">{seg.id}</span>
-                                    {seg.tsr > 0 && <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />}
+                                    <span className="font-mono text-[11px] font-bold text-sky-700">{seg.id}</span>
+                                    {seg.tsr > 0 && <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />}
                                 </div>
-                                <div className="text-[11px] font-bold line-clamp-1">{seg.name.split(' ➔ ')[1]}</div>
-                                <div className="text-[10px] text-slate-400 font-mono">{seg.length}</div>
+                                <div className="text-[11px] font-extrabold line-clamp-1">{seg.name.split(' ➔ ')[1]}</div>
+                                <div className="text-[10px] text-slate-500 font-mono font-medium">{seg.length}</div>
                             </button>
                         );
                     })}
@@ -72,43 +72,44 @@ export default function CorridorMap() {
 
             {/* Selected Map Segment Telemetry Panel */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+                <div className="glass-card rounded-2xl p-5 border border-slate-200 bg-white shadow-sm space-y-3">
                     <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-cyan-400" />
-                        <h4 className="text-xs font-bold text-white uppercase tracking-wider">Segment Section</h4>
+                        <MapPin className="w-4 h-4 text-sky-600" />
+                        <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Segment Section</h4>
                     </div>
-                    <div className="text-base font-extrabold text-white">{current.name}</div>
-                    <div className="text-xs font-mono text-slate-400">Total Track Distance: <strong className="text-cyan-400">{current.length}</strong></div>
+                    <div className="text-base font-extrabold text-slate-900">{current.name}</div>
+                    <div className="text-xs font-mono text-slate-600">Total Track Distance: <strong className="text-sky-700">{current.length}</strong></div>
                 </div>
 
-                <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+                <div className="glass-card rounded-2xl p-5 border border-slate-200 bg-white shadow-sm space-y-3">
                     <div className="flex items-center gap-2">
-                        <Gauge className="w-4 h-4 text-amber-400" />
-                        <h4 className="text-xs font-bold text-white uppercase tracking-wider">Permissible Speed & TSR</h4>
+                        <Gauge className="w-4 h-4 text-amber-600" />
+                        <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Permissible Speed & TSR</h4>
                     </div>
-                    <div className="text-base font-extrabold font-mono text-white">
-                        Max Speed: <span className="text-cyan-400">{current.maxSpeed} km/h</span>
+                    <div className="text-base font-extrabold font-mono text-slate-900">
+                        Max Speed: <span className="text-sky-700">{current.maxSpeed} km/h</span>
                     </div>
                     {current.tsr > 0 ? (
-                        <span className="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold px-2.5 py-0.5 rounded">
+                        <span className="inline-block bg-amber-50 text-amber-800 border border-amber-200 text-xs font-mono font-bold px-2.5 py-0.5 rounded">
                             Active TSR: {current.tsr} km/h (Track Maintenance)
                         </span>
                     ) : (
-                        <span className="inline-block bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold px-2.5 py-0.5 rounded">
+                        <span className="inline-block bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-mono font-bold px-2.5 py-0.5 rounded">
                             No Speed Restrictions
                         </span>
                     )}
                 </div>
 
-                <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+                <div className="glass-card rounded-2xl p-5 border border-slate-200 bg-white shadow-sm space-y-3">
                     <div className="flex items-center gap-2">
-                        <Train className="w-4 h-4 text-purple-400" />
-                        <h4 className="text-xs font-bold text-white uppercase tracking-wider">Train Traffic Density</h4>
+                        <Train className="w-4 h-4 text-purple-600" />
+                        <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Train Traffic Density</h4>
                     </div>
-                    <div className="text-base font-extrabold font-mono text-white">{current.trains} Express/Freight Trains</div>
-                    <div className="text-xs text-slate-400 font-mono">Segment Occupancy Rate: <strong className="text-emerald-400">Normal Capacity</strong></div>
+                    <div className="text-base font-extrabold font-mono text-slate-900">{current.trains} Express/Freight Trains</div>
+                    <div className="text-xs text-slate-600 font-mono">Segment Occupancy Rate: <strong className="text-emerald-700">Normal Capacity</strong></div>
                 </div>
             </div>
         </div>
     );
 }
+

@@ -1,6 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Network, Activity, ShieldCheck, MapPin, Gauge, Cpu, CheckCircle2, ArrowRight } from 'lucide-react';
 
+const DEFAULT_STATIONS = [
+    { code: 'NDLS', name: 'New Delhi', km: 0, platforms: 16, status: 'NOMINAL', congestion: 'High' },
+    { code: 'CNB', name: 'Kanpur Central', km: 440, platforms: 10, status: 'NOMINAL', congestion: 'High' },
+    { code: 'PRYJ', name: 'Prayagraj', km: 635, platforms: 10, status: 'NOMINAL', congestion: 'Medium' },
+    { code: 'DDU', name: 'Pt. DD Upadhyaya', km: 788, platforms: 8, status: 'NOMINAL', congestion: 'High' },
+    { code: 'GAYA', name: 'Gaya Junction', km: 992, platforms: 9, status: 'NOMINAL', congestion: 'Low' },
+    { code: 'DHN', name: 'Dhanbad Junction', km: 1193, platforms: 7, status: 'NOMINAL', congestion: 'Medium' },
+    { code: 'ASN', name: 'Asansol Junction', km: 1252, platforms: 7, status: 'NOMINAL', congestion: 'Medium' },
+    { code: 'HWH', name: 'Howrah Junction', km: 1447, platforms: 23, status: 'NOMINAL', congestion: 'Critical' }
+];
+
+const DEFAULT_SEGMENTS = [
+    { from: 'NDLS', to: 'CNB', dist: 440, tracks: 2, maxSpeed: 130 },
+    { from: 'CNB', to: 'PRYJ', dist: 195, tracks: 2, maxSpeed: 130 },
+    { from: 'PRYJ', to: 'DDU', dist: 153, tracks: 2, maxSpeed: 130 },
+    { from: 'DDU', to: 'GAYA', dist: 204, tracks: 2, maxSpeed: 110 },
+    { from: 'GAYA', to: 'DHN', dist: 201, tracks: 2, maxSpeed: 110 },
+    { from: 'DHN', to: 'ASN', dist: 59, tracks: 2, maxSpeed: 120 },
+    { from: 'ASN', to: 'HWH', dist: 194, tracks: 2, maxSpeed: 130 }
+];
+
 export default function DigitalTwinTab() {
     const [networkData, setNetworkData] = useState(null);
     const [selectedStation, setSelectedStation] = useState('CNB');
@@ -8,11 +29,14 @@ export default function DigitalTwinTab() {
     useEffect(() => {
         fetch('/api/network')
             .then((res) => res.json())
-            .then((data) => setNetworkData(data))
+            .then((data) => {
+                if (data && data.stations && data.stations.length > 0) {
+                    setNetworkData(data);
+                }
+            })
             .catch((err) => console.warn('[AVAIL React] Network fetch error:', err));
     }, []);
 
-    // Fallback metadata (platforms/status/congestion are not part of the network graph API)
     const stationMeta = {
         NDLS: { platforms: 16, status: 'NOMINAL', congestion: 'High' },
         CNB: { platforms: 10, status: 'NOMINAL', congestion: 'High' },
@@ -24,63 +48,65 @@ export default function DigitalTwinTab() {
         HWH: { platforms: 23, status: 'NOMINAL', congestion: 'Critical' }
     };
 
-    const stations = (networkData?.stations || []).map((st) => {
-        const meta = stationMeta[st.code] || stationMeta['CNB'];
+    const stations = (networkData?.stations?.length ? networkData.stations : DEFAULT_STATIONS).map((st) => {
+        const meta = stationMeta[st.code] || { platforms: 8, status: 'NOMINAL', congestion: 'Medium' };
         return {
-            code: st.code,
-            name: st.name,
-            km: st.km,
+            code: st.code || 'CNB',
+            name: st.name || st.code || 'Station',
+            km: st.km ?? 0,
             platforms: meta.platforms,
-            status: st.code === 'PRYJ' && (networkData?.segments || []).find((s) => s.from === 'PRYJ' || s.to === 'PRYJ')?.max_speed_kmph ? meta.status : meta.status,
+            status: meta.status,
             congestion: meta.congestion
         };
     });
 
-    const segments = (networkData?.segments || []).map((seg) => ({
-        from: seg.from,
-        to: seg.to,
-        dist: seg.length_km,
-        tracks: seg.tracks,
-        maxSpeed: seg.max_speed_kmph
-    }));
+    const segments = networkData?.segments?.length
+        ? networkData.segments.map((seg) => ({
+            from: seg.from,
+            to: seg.to,
+            dist: seg.length_km,
+            tracks: seg.tracks,
+            maxSpeed: seg.max_speed_kmph
+        }))
+        : DEFAULT_SEGMENTS;
 
-    const activeStn = stations.find((s) => s.code === selectedStation) || stations[1];
+    const activeStn = stations.find((s) => s.code === selectedStation) || stations[0] || DEFAULT_STATIONS[0];
 
     return (
         <div className="space-y-6">
             {/* Header Banner */}
-            <div className="glass-card rounded-2xl p-6 border border-cyan-500/30 bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/40 flex flex-wrap items-center justify-between gap-4">
+            <div className="glass-card rounded-2xl p-6 border border-sky-200 bg-white shadow-sm flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div className="flex items-center gap-2">
-                        <Network className="w-5 h-5 text-cyan-400" />
-                        <h2 className="text-lg font-extrabold text-white">Box 3: Network Digital Twin (Spatio-Temporal Graph)</h2>
+                        <Network className="w-5 h-5 text-sky-600" />
+                        <h2 className="text-lg font-bold text-slate-900">Box 3: Network Digital Twin (Spatio-Temporal Graph)</h2>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+                    <p className="text-xs text-slate-600 mt-1 max-w-2xl">
                         Real-time digital model of the 1,447 km New Delhi – Howrah Main Line corridor tracking node capacities, edge speeds, and signal block occupancy.
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3 font-mono text-xs">
-                    <div className="bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 text-slate-300">
-                        Nodes: <strong className="text-cyan-400">8 Junctions</strong>
+                    <div className="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-slate-700">
+                        Nodes: <strong className="text-sky-700">8 Junctions</strong>
                     </div>
-                    <div className="bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 text-slate-300">
-                        Edges: <strong className="text-cyan-400">7 Track Segments</strong>
+                    <div className="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-slate-700">
+                        Edges: <strong className="text-sky-700">7 Track Segments</strong>
                     </div>
                 </div>
             </div>
 
             {/* Visual Spatio-Temporal Node-Edge Graph Canvas */}
-            <div className="glass-card rounded-2xl p-6 border border-slate-800 space-y-6 bg-slate-900/90 overflow-x-auto">
+            <div className="glass-card rounded-2xl p-6 border border-slate-200 bg-white shadow-sm space-y-6 overflow-x-auto">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">Corridor Node-Edge Topology Graph</h3>
-                    <span className="text-xs text-cyan-400 font-mono">1,447 km Double/Triple Electric Line</span>
+                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Corridor Node-Edge Topology Graph</h3>
+                    <span className="text-xs text-sky-700 font-mono font-semibold">1,447 km Double/Triple Electric Line</span>
                 </div>
 
                 {/* Node-Edge Flow diagram */}
                 <div className="min-w-[900px] flex items-center justify-between relative py-8 px-4">
-                    {/* Edge Connection Lines */}
-                    <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-1.5 bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 rounded-full z-0 opacity-40"></div>
+                    {/* Edge Connection Line */}
+                    <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-1.5 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 rounded-full z-0 opacity-70"></div>
 
                     {stations.map((stn) => {
                         const isSelected = selectedStation === stn.code;
@@ -92,21 +118,17 @@ export default function DigitalTwinTab() {
                                     }`}
                             >
                                 <div
-                                    className={`w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold text-xs font-mono border-2 transition-all shadow-xl ${isSelected
-                                            ? 'bg-cyan-500 text-slate-950 border-cyan-300 shadow-cyan-500/50 ring-4 ring-cyan-500/20'
-                                            : stn.status === 'TSR_ACTIVE'
-                                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
-                                                : stn.status === 'MAINT_BLOCK'
-                                                    ? 'bg-pink-500/20 text-pink-300 border-pink-500/50'
-                                                    : 'bg-slate-900 text-slate-300 border-slate-700 group-hover:border-cyan-400'
+                                    className={`w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold text-xs font-mono border-2 transition-all shadow-md ${isSelected
+                                        ? 'bg-sky-600 text-white border-sky-400 ring-4 ring-sky-100 shadow-sky-200'
+                                        : 'bg-white text-slate-800 border-slate-300 group-hover:border-sky-500'
                                         }`}
                                 >
                                     {stn.code}
                                 </div>
 
                                 <div className="text-center">
-                                    <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">{stn.name}</div>
-                                    <div className="text-[10px] text-slate-400 font-mono">{stn.km} km</div>
+                                    <div className="text-xs font-bold text-slate-800 group-hover:text-sky-700 transition-colors">{stn.name}</div>
+                                    <div className="text-[10px] text-slate-500 font-mono">{stn.km} km</div>
                                 </div>
                             </button>
                         );
@@ -117,58 +139,58 @@ export default function DigitalTwinTab() {
             {/* Selected Station Node & Track Edge Telemetry */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Selected Station Inspector */}
-                <div className="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="glass-card rounded-2xl p-6 border border-slate-200 bg-white shadow-sm space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div className="flex items-center gap-2">
-                            <MapPin className="w-5 h-5 text-cyan-400" />
-                            <h3 className="text-sm font-bold text-white">Station Node: {activeStn.name} ({activeStn.code})</h3>
+                            <MapPin className="w-5 h-5 text-sky-600" />
+                            <h3 className="text-sm font-bold text-slate-900">Station Node: {activeStn?.name || 'Kanpur Central'} ({activeStn?.code || 'CNB'})</h3>
                         </div>
-                        <span className="text-xs font-mono font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-0.5 rounded-full">
-                            {activeStn.km} KM
+                        <span className="text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded-full">
+                            {activeStn?.km ?? 440} KM
                         </span>
                     </div>
 
                     <div className="space-y-3 text-xs">
-                        <div className="flex justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
-                            <span className="text-slate-400">Platform Lines:</span>
-                            <strong className="text-white font-mono">{activeStn.platforms} Tracks</strong>
+                        <div className="flex justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <span className="text-slate-600 font-medium">Platform Lines:</span>
+                            <strong className="text-slate-900 font-mono">{activeStn?.platforms ?? 10} Tracks</strong>
                         </div>
-                        <div className="flex justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
-                            <span className="text-slate-400">Node Status:</span>
-                            <strong className="text-emerald-400 font-mono">{activeStn.status}</strong>
+                        <div className="flex justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <span className="text-slate-600 font-medium">Node Status:</span>
+                            <strong className="text-emerald-700 font-mono">{activeStn?.status || 'NOMINAL'}</strong>
                         </div>
-                        <div className="flex justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
-                            <span className="text-slate-400">Congestion Level:</span>
-                            <strong className="text-amber-400 font-mono">{activeStn.congestion}</strong>
+                        <div className="flex justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <span className="text-slate-600 font-medium">Congestion Level:</span>
+                            <strong className="text-amber-700 font-mono">{activeStn?.congestion || 'High'}</strong>
                         </div>
-                        <div className="flex justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
-                            <span className="text-slate-400">Signal Block System:</span>
-                            <strong className="text-cyan-400 font-mono">Absolute / Automatic Block</strong>
+                        <div className="flex justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <span className="text-slate-600 font-medium">Signal Block System:</span>
+                            <strong className="text-sky-700 font-mono">Absolute / Automatic Block</strong>
                         </div>
                     </div>
                 </div>
 
                 {/* Track Segments Edge Inspector */}
-                <div className="lg:col-span-2 glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="lg:col-span-2 glass-card rounded-2xl p-6 border border-slate-200 bg-white shadow-sm space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div className="flex items-center gap-2">
-                            <Gauge className="w-5 h-5 text-cyan-400" />
-                            <h3 className="text-sm font-bold text-white">Track Segment Edges & Speed Restrictions</h3>
+                            <Gauge className="w-5 h-5 text-sky-600" />
+                            <h3 className="text-sm font-bold text-slate-900">Track Segment Edges & Speed Restrictions</h3>
                         </div>
-                        <span className="text-xs text-slate-400 font-mono">7 Sub-Corridor Sections</span>
+                        <span className="text-xs text-slate-500 font-mono">7 Sub-Corridor Sections</span>
                     </div>
 
                     <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
                         {segments.map((seg, idx) => (
-                            <div key={idx} className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between text-xs font-mono">
+                            <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs font-mono">
                                 <div className="flex items-center gap-3">
-                                    <span className="font-extrabold text-cyan-400">{seg.from} ➔ {seg.to}</span>
-                                    <span className="text-slate-400">({seg.dist} km)</span>
+                                    <span className="font-extrabold text-sky-700">{seg.from} ➔ {seg.to}</span>
+                                    <span className="text-slate-500">({seg.dist} km)</span>
                                 </div>
                                 <div className="flex items-center gap-4">
-                                    <span className="text-slate-300">Max: <strong className="text-white">{seg.maxSpeed} km/h</strong></span>
-                                    <span className="text-slate-400">{seg.tracks} tracks</span>
-                                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded font-bold">
+                                    <span className="text-slate-600">Max: <strong className="text-slate-900">{seg.maxSpeed} km/h</strong></span>
+                                    <span className="text-slate-500">{seg.tracks} tracks</span>
+                                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-bold">
                                         Clear Speed
                                     </span>
                                 </div>
@@ -180,3 +202,4 @@ export default function DigitalTwinTab() {
         </div>
     );
 }
+

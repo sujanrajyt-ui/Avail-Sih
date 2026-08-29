@@ -164,17 +164,17 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
     return (
         <div className="space-y-6">
             {/* Header Banner */}
-            <div className="glass-card rounded-2xl p-6 border border-cyan-500/30 bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/40 flex flex-wrap items-center justify-between gap-4">
+            <div className="glass-card rounded-2xl p-6 border border-sky-200 bg-white shadow-sm flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-lg font-extrabold text-white">Box 1 & 6: Data Ingestion & Schedule Export</h2>
-                    <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+                    <h2 className="text-lg font-bold text-slate-900">Box 1 & 6: Data Ingestion & Schedule Export</h2>
+                    <p className="text-xs text-slate-600 mt-1 max-w-2xl">
                         Submit new departmental maintenance requests, upload custom CSV Working Timetables (WTT), or export the conflict-free schedule.
                     </p>
                 </div>
 
                 <button
                     onClick={handleExportCSV}
-                    className="flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-500/25 transition-all"
+                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all"
                 >
                     <Download className="w-4 h-4" />
                     <span>Export Schedule CSV</span>
@@ -184,15 +184,15 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
             {/* Grid: Request Form & CSV Uploader */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Left: Department Request Form */}
-                <div className="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
-                    <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-                        <PlusCircle className="w-5 h-5 text-cyan-400" />
-                        <h3 className="text-sm font-bold text-white uppercase tracking-wider">Submit Departmental Maintenance Request</h3>
+                <div className="glass-card rounded-2xl p-6 border border-slate-200 bg-white shadow-sm space-y-4">
+                    <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <PlusCircle className="w-5 h-5 text-sky-600" />
+                        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Submit Departmental Maintenance Request</h3>
                     </div>
 
                     {submittedMessage && (
-                        <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-xs font-mono text-emerald-300 flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-mono text-emerald-800 flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                             <span>{submittedMessage}</span>
                         </div>
                     )}
@@ -200,11 +200,11 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
                     <form onSubmit={handleSubmitRequest} className="space-y-4 text-xs">
                         <div className="grid grid-cols-2 gap-3">
                             <div>
-                                <label className="font-bold text-slate-400 block mb-1">Department</label>
+                                <label className="font-bold text-slate-700 block mb-1">Department</label>
                                 <select
                                     value={department}
                                     onChange={(e) => setDepartment(e.target.value)}
-                                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:border-cyan-400 focus:outline-none"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:border-sky-500 focus:outline-none"
                                 >
                                     <option value="Civil">Civil Engineering</option>
                                     <option value="OHE">OHE (Electrical)</option>
@@ -213,11 +213,11 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
                             </div>
 
                             <div>
-                                <label className="font-bold text-slate-400 block mb-1">Corridor Segment</label>
+                                <label className="font-bold text-slate-700 block mb-1">Corridor Segment</label>
                                 <select
                                     value={segment}
                                     onChange={(e) => setSegment(e.target.value)}
-                                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:border-cyan-400 focus:outline-none"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:border-sky-500 focus:outline-none"
                                 >
                                     <option value="NDLS-CNB">NDLS-CNB (New Delhi-Kanpur)</option>
                                     <option value="CNB-PRYJ">CNB-PRYJ (Kanpur-Prayagraj)</option>
@@ -231,34 +231,34 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
                         </div>
 
                         <div>
-                            <label className="font-bold text-slate-400 block mb-1">Work Description</label>
+                            <label className="font-bold text-slate-700 block mb-1">Work Description</label>
                             <input
                                 type="text"
                                 value={workType}
                                 onChange={(e) => setWorkType(e.target.value)}
-                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:border-cyan-400 focus:outline-none"
+                                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:border-sky-500 focus:outline-none"
                                 required
                             />
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
                             <div>
-                                <label className="font-bold text-slate-400 block mb-1">Start Minute (0–1440)</label>
+                                <label className="font-bold text-slate-700 block mb-1">Start Minute (0–1440)</label>
                                 <input
                                     type="number"
                                     value={startMin}
                                     onChange={(e) => setStartMin(e.target.value)}
-                                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 font-mono text-white focus:border-cyan-400 focus:outline-none"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-mono text-slate-900 focus:border-sky-500 focus:outline-none"
                                 />
                             </div>
 
                             <div>
-                                <label className="font-bold text-slate-400 block mb-1">End Minute (0–1440)</label>
+                                <label className="font-bold text-slate-700 block mb-1">End Minute (0–1440)</label>
                                 <input
                                     type="number"
                                     value={endMin}
                                     onChange={(e) => setEndMin(e.target.value)}
-                                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 font-mono text-white focus:border-cyan-400 focus:outline-none"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-mono text-slate-900 focus:border-sky-500 focus:outline-none"
                                 />
                             </div>
                         </div>
@@ -266,7 +266,7 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/40 py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                            className="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm"
                         >
                             <Send className="w-4 h-4" />
                             <span>{isSubmitting ? 'Submitting & CP-SAT Re-solving...' : 'Submit Request to AI Pipeline'}</span>
@@ -275,21 +275,21 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
                 </div>
 
                 {/* Right: Custom WTT Drag & Drop CSV Uploader (Box 1) */}
-                <div className="glass-card rounded-2xl p-6 border border-slate-800 space-y-4 flex flex-col justify-between">
+                <div className="glass-card rounded-2xl p-6 border border-slate-200 bg-white shadow-sm space-y-4 flex flex-col justify-between">
                     <div>
-                        <div className="flex items-center gap-2 border-b border-slate-800 pb-3 mb-4">
-                            <Upload className="w-5 h-5 text-amber-400" />
-                            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Custom WTT & Telemetry CSV Ingestion</h3>
+                        <div className="flex items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+                            <Upload className="w-5 h-5 text-amber-600" />
+                            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Custom WTT & Telemetry CSV Ingestion</h3>
                         </div>
-                        <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                        <p className="text-xs text-slate-600 leading-relaxed mb-4">
                             Drag and drop custom Working Timetable (WTT) CSV files or maintenance request lists to dynamically ingest data into Box 1 of the AI pipeline.
                         </p>
 
-                        <label className="border-2 border-dashed border-slate-700 hover:border-cyan-400 bg-slate-950/80 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all">
+                        <label className="border-2 border-dashed border-slate-300 hover:border-sky-500 bg-slate-50 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all">
                             <input type="file" accept=".csv,.json" onChange={handleFileUpload} className="hidden" disabled={isUploading} />
-                            <FileSpreadsheet className="w-10 h-10 text-cyan-400 opacity-80" />
+                            <FileSpreadsheet className="w-10 h-10 text-sky-600 opacity-80" />
                             <div className="text-center">
-                                <span className="text-xs font-bold text-white block">
+                                <span className="text-xs font-bold text-slate-900 block">
                                     {isUploading ? 'Uploading & parsing...' : 'Click to upload or drag & drop CSV file'}
                                 </span>
                                 <span className="text-[11px] text-slate-500 font-mono">Supports .csv, .json format (Max 10 MB) — JSON array or CSV with headers: request_id, department, segment, preferred_start_min, preferred_end_min...</span>
@@ -297,28 +297,29 @@ export default function ReportsTab({ blocks, onRequestSubmitted }) {
                         </label>
 
                         {uploadedFileName && !uploadError && (
-                            <div className="mt-4 p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-xs font-mono text-cyan-300 flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                            <div className="mt-4 p-3 rounded-xl bg-sky-50 border border-sky-200 text-xs font-mono text-sky-800 flex items-center gap-2">
+                                <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0" />
                                 <div>
                                     <div>Uploaded: {uploadedFileName}</div>
-                                    <div className="text-cyan-200/80">{uploadInfo}</div>
+                                    <div className="text-sky-700">{uploadInfo}</div>
                                 </div>
                             </div>
                         )}
 
                         {uploadError && (
-                            <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/40 text-xs font-mono text-red-300 flex items-center gap-2">
-                                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                            <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-mono text-red-800 flex items-center gap-2">
+                                <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
                                 <span>{uploadError}</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 font-mono">
-                        Active Dataset: <strong className="text-white">NDLS-HWH WTT Timetable (23 Trains, 8 Stations)</strong>
+                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600 font-mono">
+                        Active Dataset: <strong className="text-slate-900">NDLS-HWH WTT Timetable (23 Trains, 8 Stations)</strong>
                     </div>
                 </div>
             </div>
         </div>
     );
 }
+
